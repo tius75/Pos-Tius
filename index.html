@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir POS Tius System</title>
+    <title>Kasir POS System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
@@ -11,12 +11,12 @@
             display: flex;
             min-height: 100vh;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent horizontal scroll when sidebar is out */
         }
         #wrapper {
             display: flex;
             width: 100%;
-            overflow: hidden;
+            overflow: hidden; /* Ensure content doesn't overflow when sidebar is hidden */
         }
         .sidebar {
             width: 250px;
@@ -27,14 +27,16 @@
             top: 0;
             height: 100vh;
             overflow-y: auto;
-            flex-shrink: 0;
-            transition: margin-left 0.3s ease, transform 0.3s ease;
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
+            transition: margin-left 0.3s ease, transform 0.3s ease; /* Smooth transition for sidebar */
         }
         .main-content {
             flex-grow: 1;
             padding: 20px;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s ease; /* Smooth transition for main content */
         }
+
+        /* Styling for navigation links */
         .nav-link {
             display: flex;
             align-items: center;
@@ -55,10 +57,12 @@
             margin-right: 10px;
             font-size: 1.2rem;
         }
+
+        /* Receipt styling */
         .receipt {
             font-family: 'Courier New', monospace;
             width: 100%;
-            max-width: 400px;
+            max-width: 300px;
             margin: 0 auto;
             padding: 15px;
             border: 1px dashed #ccc;
@@ -80,6 +84,8 @@
             padding-top: 5px;
             margin-top: 5px;
         }
+
+        /* Print styles */
         @media print {
             .no-print {
                 display: none !important;
@@ -94,17 +100,19 @@
                 max-width: none;
                 padding: 0;
             }
-            .sidebar, .navbar, .modal-footer {
+            .sidebar, .navbar, .modal-footer { /* Hide sidebar and nav in print */
                 display: none !important;
             }
             .main-content {
                 padding: 0;
-                margin-left: 0 !important;
+                margin-left: 0 !important; /* Ensure no margin in print */
             }
             #wrapper {
-                display: block;
+                display: block; /* Change to block for print layout */
             }
         }
+
+        /* Product image and section styling */
         .product-img {
             width: 60px;
             height: 60px;
@@ -124,6 +132,8 @@
             margin-bottom: 15px;
             color: #0d6efd;
         }
+
+        /* Product Grid View Specific Styles */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -174,26 +184,32 @@
             font-size: 0.85rem;
             padding: 5px 10px;
         }
+
+        /* Mobile specific styles */
         @media (max-width: 768px) {
             .sidebar {
-                position: fixed;
+                position: fixed; /* Fixed position for off-screen */
                 top: 0;
                 left: 0;
-                transform: translateX(-100%);
-                z-index: 1030;
+                transform: translateX(-100%); /* Hide sidebar off-screen */
+                z-index: 1030; /* Ensure it's above other content */
                 box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             }
             #wrapper.toggled .sidebar {
-                transform: translateX(0%);
+                transform: translateX(0%); /* Show sidebar */
             }
             .main-content {
-                width: 100%;
-                margin-left: 0;
+                width: 100%; /* Take full width */
+                margin-left: 0; /* No margin when sidebar is hidden */
+            }
+            #wrapper.toggled .main-content {
+                /* No need to push content, sidebar is overlaid */
             }
             .navbar {
-                display: flex !important;
+                display: flex !important; /* Show navbar toggler in mobile */
                 width: 100%;
             }
+            /* Overlay for when sidebar is open */
             #wrapper.toggled::after {
                 content: '';
                 position: fixed;
@@ -202,13 +218,14 @@
                 right: 0;
                 bottom: 0;
                 background: rgba(0,0,0,0.5);
-                z-index: 1029;
+                z-index: 1029; /* Below sidebar, above content */
             }
+            /* Adjust pending modal for mobile */
             #pendingModal .modal-dialog {
                 margin: 0;
                 width: 100%;
                 height: 100%;
-                max-width: none;
+                max-width: none; /* Override max-width */
             }
             #pendingModal .modal-content {
                 height: 100%;
@@ -218,66 +235,20 @@
                 overflow-y: auto;
             }
         }
+
+        /* Desktop specific styles (default) */
         @media (min-width: 769px) {
             .sidebar {
-                position: sticky;
-                transform: translateX(0%);
+                position: sticky; /* Always visible on desktop */
+                transform: translateX(0%); /* Ensure it's not translated */
             }
             .main-content {
-                margin-left: 0;
+                margin-left: 0; /* No margin needed for desktop */
             }
             .navbar {
-                display: none !important;
+                display: none !important; /* Hide navbar toggler on desktop */
             }
-        }
-        .sync-status {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            z-index: 1000;
-        }
-        .sync-status.online {
-            background-color: #28a745;
-            color: white;
-        }
-        .sync-status.offline {
-            background-color: #dc3545;
-            color: white;
-        }
-        .sync-status.syncing {
-            background-color: #ffc107;
-            color: black;
-        }
-        /* Style for quick menu buttons */
-        .quick-menu {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .quick-menu button {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        .quick-menu button i {
-            margin-bottom: 5px;
-            font-size: 1.5rem;
-        }
-        .edit-row {
-            background-color: #f0f8ff; /* Light blue background for editing row */
-        }
-        .edit-row input[type="number"], .edit-row input[type="text"] {
-            width: 80px; /* Adjust width as needed */
-        }
-    </style>
+        </style>
 </head>
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom no-print">
@@ -324,14 +295,6 @@
             <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
                 <div class="section">
                     <h2 class="section-title"><i class="bi bi-speedometer2"></i> Dashboard</h2>
-                    <div class="quick-menu">
-                        <button class="btn btn-success" id="quick-sales">
-                            <i class="bi bi-cart-fill"></i> Transaksi Penjualan
-                        </button>
-                        <button class="btn btn-info" id="quick-add-product">
-                            <i class="bi bi-plus-square"></i> Tambah Produk
-                        </button>
-                    </div>
                     <div class="row">
                         <div class="col-md-3">
                             <div class="card text-white bg-primary mb-3">
@@ -450,11 +413,8 @@
                                 </table>
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
-                                <h4 class="mb-0">Total: <span id="transaction-total" class="text-primary">0</span></h4>
-                                <div class="d-flex flex-wrap mt-2 mt-md-0">
-                                    <button class="btn btn-outline-danger me-2 mb-2 mb-md-0" id="save-pending">
-                                        <i class="bi bi-hourglass"></i> Simpan Pending
+                            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap"> <h4 class="mb-0">Total: <span id="transaction-total" class="text-primary">0</span></h4>
+                                <div class="d-flex flex-wrap mt-2 mt-md-0"> <button class="btn btn-outline-danger me-2 mb-2 mb-md-0" id="save-pending"> <i class="bi bi-hourglass"></i> Simpan Pending
                                     </button>
                                     <button class="btn btn-primary" id="process-payment">
                                         <i class="bi bi-credit-card"></i> Proses Pembayaran
@@ -462,7 +422,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 d-none"></div>
+                        <div class="col-md-4 d-none"> </div>
                     </div>
                 </div>
             </div>
@@ -489,8 +449,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="product-sell-price" class="form-label">Harga Jual</label>
-                                            <input type="text" class="form-control" id="product-sell-price" required>
-                                        </div>
+                                            <input type="text" class="form-control" id="product-sell-price" required> </div>
                                         <div class="mb-3">
                                             <label for="product-stock" class="form-label">Stok Awal</label>
                                             <input type="number" class="form-control" id="product-stock" min="0" value="0" required>
@@ -868,8 +827,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
-                                <th>Pelanggan</th>
-                                <th>Items</th>
+                                <th>Pelanggan</th> <th>Items</th>
                                 <th>Total</th>
                                 <th>Aksi</th>
                             </tr>
@@ -909,8 +867,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="amount-paid" class="form-label">Jumlah Dibayar</label>
-                        <input type="text" class="form-control" id="amount-paid" value="0">
-                    </div>
+                        <input type="text" class="form-control" id="amount-paid" value="0"> </div>
                     <div class="mb-3">
                         <label class="form-label">Kembalian</label>
                         <div class="form-control bg-light" id="change-amount">0</div>
@@ -949,438 +906,125 @@
         </div>
     </div>
 
-    <div class="sync-status offline" id="syncStatus">
-        <i class="bi bi-wifi-off"></i> Offline Mode
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script>
-        // --- Configuration ---
-        const CLOUDINARY_CLOUD_NAME = 'ganti_dengan_cloud_name_anda';
-        const CLOUDINARY_UPLOAD_PRESET = 'ganti_dengan_upload_preset_anda';
+        // --- Cloudinary Configuration (GANTI DENGAN KUNCI ASLI ANDA!) ---
+        const CLOUDINARY_CLOUD_NAME = 'ganti_dengan_cloud_name_anda'; 
+        const CLOUDINARY_UPLOAD_PRESET = 'ganti_dengan_upload_preset_anda'; 
+        // --- Akhir Konfigurasi Cloudinary ---
 
+        // --- Firebase Configuration (GANTI DENGAN KONFIGURASI PROYEK ANDA!) ---
         const firebaseConfig = {
-            apiKey: "AIzaSyC5YSW3dO3A8LpJls2UfSzw83ii4iEDvTY,",
-            authDomain: "pos-kasir-tius.firebaseapp.com",
-            projectId: "pos-kasir-tius",
-            storageBucket: "pos-kasir-tius.firebasestorage.app",
-            messagingSenderId: "796956392182",
-            appId: "1:796956392182:web:bb801fcd22cb2bcf6dcad7"
+            apiKey: "AIzaSyBVCynAyWLPqwhkEx4dR0k5J_OsL-0Q_rY",
+            authDomain: "kasir-toko-70d61.firebaseapp.com",
+            projectId: "kasir-toko-70d61",
+            storageBucket: "kasir-toko-70d61.firebasestorage.app",
+            messagingSenderId: "1057810583954",
+            appId: "1:1057810583954:web:788e1058ad4a07eb84f14b"
         };
-
+        
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
-        // Enable offline persistence
-        db.enablePersistence()
-            .then(() => {
-                console.log("Offline persistence enabled");
-            })
-            .catch((err) => {
-                console.error("Error enabling offline persistence:", err);
-            });
-
-        // Local storage keys
-        const LOCAL_PRODUCTS_KEY = 'pos_products';
-        const LOCAL_TRANSACTIONS_KEY = 'pos_transactions';
-        const LOCAL_PENDING_KEY = 'pos_pending_transactions';
-        const LOCAL_LAST_SYNC_KEY = 'pos_last_sync';
+        // --- Akhir Konfigurasi Firebase ---
 
         // Initialize variables
-        let products = [];
-        let transactions = [];
-        let pendingTransactions = [];
+        // Data now stored in Firestore, so no longer using localStorage directly for main data
+        let products = []; // Will be populated from Firestore
+        let transactions = []; // Will be populated from Firestore
+        let pendingTransactions = []; // Will be populated from Firestore
         let settings = JSON.parse(localStorage.getItem('pos_settings')) || {
-            storeName: 'Toko Maju Jaya',
+            storeName: 'Toko Liedia',
             storeAddress: 'Jl. Raya No. 123, Bekasi',
             storePhone: '021-1234567',
             receiptFooter: 'Terima kasih atas kunjungan Anda!',
-            printerPaperSize: '80mm',
-            printPreview: 'yes',
-            currencySymbol: 'Rp ',
-            syncEnabled: true
+            printerPaperSize: '80mm', // Default
+            printPreview: 'yes', // Default
+            currencySymbol: 'Rp ' // Default currency symbol
         };
-
         let currentTransaction = {
-            id: null,
+            id: null, // Will use Firestore document ID
             date: null,
             items: [],
-            customerName: '',
+            customerName: '', 
             paymentMethod: 'cash',
             amountPaid: 0,
             change: 0,
             total: 0,
             profit: 0
         };
+        let editingProductId = null; 
+        let currentProductView = 'list'; 
 
-        let editingProductId = null;
-        let currentProductView = 'list';
-        let isOnline = navigator.onLine;
-        let syncStatusElement = document.getElementById('syncStatus');
-        let editingTransactionId = null; // To track which transaction is being edited
-
-        // DOM elements
+        // DOM elements (same as before)
         const todaySalesElement = document.getElementById('today-sales');
         const todayProfitElement = document.getElementById('today-profit');
         const totalProductsElement = document.getElementById('total-products');
         const pendingTransactionsElement = document.getElementById('pending-transactions');
         const productSearchElement = document.getElementById('product-search');
-        const productDisplayArea = document.getElementById('product-display-area');
-        const productTableView = document.getElementById('product-table-view');
-        const productGridView = document.getElementById('product-grid-view');
-        const viewListBtn = document.getElementById('view-list-btn');
-        const viewGridBtn = document.getElementById('view-grid-btn');
-        const productListElement = document.getElementById('product-list');
+        
+        const productDisplayArea = document.getElementById('product-display-area'); 
+        const productTableView = document.getElementById('product-table-view'); 
+        const productGridView = document.getElementById('product-grid-view'); 
+        const viewListBtn = document.getElementById('view-list-btn'); 
+        const viewGridBtn = document.getElementById('view-grid-btn'); 
+
+        const productListElement = document.getElementById('product-list'); 
         const transactionItemsElement = document.getElementById('transaction-items');
         const transactionTotalElement = document.getElementById('transaction-total');
         const savePendingBtn = document.getElementById('save-pending');
         const processPaymentBtn = document.getElementById('process-payment');
         const showPendingBtn = document.getElementById('show-pending');
         const pendingCountElement = document.getElementById('pending-count');
+        
         const productForm = document.getElementById('product-form');
         const productIdHidden = document.getElementById('product-id-hidden');
         const productNameInput = document.getElementById('product-name');
         const productBuyPriceInput = document.getElementById('product-buy-price');
         const productSellPriceInput = document.getElementById('product-sell-price');
         const productStockInput = document.getElementById('product-stock');
-        const productImageUpload = document.getElementById('product-image-upload');
+        const productImageUpload = document.getElementById('product-image-upload'); 
         const productImagePreview = document.querySelector('#product-image-preview img');
         const productImagePreviewContainer = document.getElementById('product-image-preview');
+
         const saveProductBtn = document.getElementById('save-product-btn');
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
         const productTableBody = document.getElementById('product-table-body');
         const productListSearch = document.getElementById('product-list-search');
+
         const reportStartDate = document.getElementById('report-start-date');
         const reportEndDate = document.getElementById('report-end-date');
-        const reportProductFilter = document.getElementById('report-product-filter');
+        const reportProductFilter = document.getElementById('report-product-filter'); 
         const generateReportBtn = document.getElementById('generate-report');
-        const downloadReportPdfBtn = document.getElementById('download-report-pdf');
+        const downloadReportPdfBtn = document.getElementById('download-report-pdf'); 
         const reportTotalSales = document.getElementById('report-total-sales');
         const reportTotalPurchases = document.getElementById('report-total-purchases');
         const reportGrossProfit = document.getElementById('report-gross-profit');
         const reportTransactions = document.getElementById('report-transactions');
-        const reportItemProfitTable = document.getElementById('report-item-profit-table');
-        const reportStockTable = document.getElementById('report-stock-table');
+        const reportItemProfitTable = document.getElementById('report-item-profit-table'); 
+        const reportStockTable = document.getElementById('report-stock-table'); 
+
         const backupProductsCheckbox = document.getElementById('backup-products');
         const backupTransactionsCheckbox = document.getElementById('backup-transactions');
         const backupPendingCheckbox = document.getElementById('backup-pending');
         const backupBtn = document.getElementById('backup-data');
         const restoreFile = document.getElementById('restore-file');
         const restoreBtn = document.getElementById('restore-data');
+        
         const pendingModal = new bootstrap.Modal(document.getElementById('pendingModal'));
         const pendingTransactionsList = document.getElementById('pending-transactions-list');
-        const pendingCustomerNameInput = document.getElementById('pending-customer-name');
+        const pendingCustomerNameInput = document.getElementById('pending-customer-name'); 
+
         const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
         const receiptContent = document.getElementById('receipt-content');
         const printReceiptBtn = document.getElementById('print-receipt');
         const shareReceiptImageBtn = document.getElementById('share-receipt-image');
+        
         const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
         const paymentModalTotal = document.getElementById('payment-modal-total');
         const paymentMethodElement = document.getElementById('payment-method');
@@ -1388,7 +1032,9 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
         const amountPaidElement = document.getElementById('amount-paid');
         const changeAmountElement = document.getElementById('change-amount');
         const completePaymentBtn = document.getElementById('complete-payment');
+        
         const historyList = document.getElementById('history-list');
+
         const storeNameInput = document.getElementById('store-name');
         const storeAddressInput = document.getElementById('store-address');
         const storePhoneInput = document.getElementById('store-phone');
@@ -1399,394 +1045,209 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
         const savePrinterSettingsBtn = document.getElementById('save-printer-settings');
         const currencySymbolInput = document.getElementById('currency-symbol');
         const saveOtherSettingsBtn = document.getElementById('save-other-settings');
-        const quickSalesBtn = document.getElementById('quick-sales');
-        const quickAddProductBtn = document.getElementById('quick-add-product');
 
-        // Update sync status display
-        function updateSyncStatus() {
-            if (isOnline) {
-                syncStatusElement.innerHTML = '<i class="bi bi-wifi"></i> Online Mode';
-                syncStatusElement.className = 'sync-status online';
-            } else {
-                syncStatusElement.innerHTML = '<i class="bi bi-wifi-off"></i> Offline Mode';
-                syncStatusElement.className = 'sync-status offline';
-            }
-        }
+        let sidebarToggle;
+        let wrapper;
+        let sidebarNav;
 
-        // Listen for online/offline status changes
-        window.addEventListener('online', () => {
-            isOnline = true;
-            updateSyncStatus();
-            if (settings.syncEnabled) {
-                syncData();
-            }
-        });
+        // --- Firebase Data Fetching and Saving Functions ---
 
-        window.addEventListener('offline', () => {
-            isOnline = false;
-            updateSyncStatus();
-        });
-
-        // Initial sync status
-        updateSyncStatus();
-
-        // Helper function to generate IDs for local storage
-        function generateId() {
-            return 'local_' + Date.now().toString() + '_' + Math.floor(Math.random() * 1000);
-        }
-
-        // Helper function to merge two arrays of objects by ID
-        function mergeArrays(localArray, serverArray, idKey) {
-            const merged = [];
-            const allIds = new Set([
-                ...localArray.map(item => item[idKey]),
-                ...serverArray.map(item => item[idKey])
-            ]);
-
-            allIds.forEach(id => {
-                const localItem = localArray.find(item => item[idKey] === id);
-                const serverItem = serverArray.find(item => item[idKey] === id);
-
-                // Prefer server item if both exist
-                if (serverItem) {
-                    merged.push(serverItem);
-                } else if (localItem) {
-                    merged.push(localItem);
-                }
-            });
-
-            return merged;
-        }
-
-        // Sync data between local storage and Firebase
-        async function syncData() {
-            if (!isOnline || !settings.syncEnabled) return;
-
-            try {
-                syncStatusElement.innerHTML = '<i class="bi bi-arrow-repeat"></i> Syncing...';
-                syncStatusElement.className = 'sync-status syncing';
-
-                // Sync products
-                const localProducts = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY)) || [];
-                const productsCol = db.collection('products');
-
-                // Get server products
-                const serverSnapshot = await productsCol.get();
-                const serverProducts = serverSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                // Merge products
-                const mergedProducts = mergeArrays(localProducts, serverProducts, 'id');
-
-                // Save merged products to both local and server
-                localStorage.setItem(LOCAL_PRODUCTS_KEY, JSON.stringify(mergedProducts));
-
-                // Batch update to Firebase
-                const batch = db.batch();
-                mergedProducts.forEach(product => {
-                    const docRef = productsCol.doc(product.id);
-                    batch.set(docRef, product);
-                });
-                await batch.commit();
-
-                // Sync transactions
-                const localTransactions = JSON.parse(localStorage.getItem(LOCAL_TRANSACTIONS_KEY)) || [];
-                const transactionsCol = db.collection('transactions');
-
-                // Get server transactions
-                const serverTransactionsSnapshot = await transactionsCol.orderBy('date', 'desc').get();
-                const serverTransactions = serverTransactionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                // Merge transactions
-                const mergedTransactions = mergeArrays(localTransactions, serverTransactions, 'id');
-                localStorage.setItem(LOCAL_TRANSACTIONS_KEY, JSON.stringify(mergedTransactions));
-
-                // Batch update transactions to Firebase
-                const transactionsBatch = db.batch();
-                mergedTransactions.forEach(transaction => {
-                    const docRef = transactionsCol.doc(transaction.id);
-                    transactionsBatch.set(docRef, transaction);
-                });
-                await transactionsBatch.commit();
-
-                // Sync pending transactions
-                const localPending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY)) || [];
-                const pendingCol = db.collection('pendingTransactions');
-
-                // Get server pending
-                const serverPendingSnapshot = await pendingCol.get();
-                const serverPending = serverPendingSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                // Merge pending
-                const mergedPending = mergeArrays(localPending, serverPending, 'id');
-                localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(mergedPending));
-
-                // Batch update pending to Firebase
-                const pendingBatch = db.batch();
-                mergedPending.forEach(pending => {
-                    const docRef = pendingCol.doc(pending.id);
-                    pendingBatch.set(docRef, pending);
-                });
-                await pendingBatch.commit();
-
-                // Update last sync time
-                localStorage.setItem(LOCAL_LAST_SYNC_KEY, new Date().toISOString());
-
-                // Refresh data
-                await fetchProducts();
-                await fetchTransactions();
-                await fetchPendingTransactions();
-
-                syncStatusElement.innerHTML = '<i class="bi bi-wifi"></i> Online Mode';
-                syncStatusElement.className = 'sync-status online';
-
-                console.log('Data synced successfully');
-            } catch (error) {
-                console.error('Error syncing data:', error);
-                syncStatusElement.innerHTML = '<i class="bi bi-wifi"></i> Online Mode';
-                syncStatusElement.className = 'sync-status online';
-            }
-        }
-
-        // Fetch products from Firebase or local storage
+        // Fetch Products from Firestore
         async function fetchProducts() {
             try {
-                if (isOnline && settings.syncEnabled) {
-                    const productsCol = db.collection('products');
-                    const snapshot = await productsCol.get();
-                    products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                    // Ensure prices and stock are numbers
-                    products.forEach(p => {
-                        p.buyPrice = parseFloat(p.buyPrice) || 0;
-                        p.sellPrice = parseFloat(p.sellPrice) || 0;
-                        p.stock = parseInt(p.stock) || 0;
-                    });
-
-                    // Save to local storage
-                    localStorage.setItem(LOCAL_PRODUCTS_KEY, JSON.stringify(products));
-                } else {
-                    // Fall back to local storage
-                    products = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY)) || [];
-                    console.log('Using local products data');
-                }
-
+                const productsCol = db.collection('products');
+                const snapshot = await productsCol.get();
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Ensure prices and stock are numbers (Firestore might return them as strings if not careful)
+                products.forEach(p => {
+                    p.buyPrice = parseFloat(p.buyPrice) || 0;
+                    p.sellPrice = parseFloat(p.sellPrice) || 0;
+                    p.stock = parseInt(p.stock) || 0;
+                });
+                console.log('Products fetched:', products);
                 loadProducts(productSearchElement.value, currentProductView);
                 populateProductFilterDropdown();
-                loadDashboard();
+                loadDashboard(); // Update dashboard after products are loaded
             } catch (error) {
                 console.error("Error fetching products: ", error);
-                // Fall back to local storage
-                products = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY)) || [];
-                loadProducts(productSearchElement.value, currentProductView);
-                populateProductFilterDropdown();
-                loadDashboard();
-                alert("Gagal memuat produk dari database. Menggunakan data lokal.");
+                alert("Gagal memuat produk dari database.");
             }
         }
 
-        // Fetch transactions from Firebase or local storage
-        async function fetchTransactions() {
-            try {
-                if (isOnline && settings.syncEnabled) {
-                    const transactionsCol = db.collection('transactions');
-                    const snapshot = await transactionsCol.orderBy('date', 'desc').get();
-                    transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                    // Save to local storage
-                    localStorage.setItem(LOCAL_TRANSACTIONS_KEY, JSON.stringify(transactions));
-                } else {
-                    // Fall back to local storage
-                    transactions = JSON.parse(localStorage.getItem(LOCAL_TRANSACTIONS_KEY)) || [];
-                    console.log('Using local transactions data');
-                }
-
-                loadHistory();
-                loadDashboard();
-            } catch (error) {
-                console.error("Error fetching transactions: ", error);
-                // Fall back to local storage
-                transactions = JSON.parse(localStorage.getItem(LOCAL_TRANSACTIONS_KEY)) || [];
-                loadHistory();
-                loadDashboard();
-                alert("Gagal memuat transaksi dari database. Menggunakan data lokal.");
-            }
-        }
-
-        // Fetch pending transactions from Firebase or local storage
-        async function fetchPendingTransactions() {
-            try {
-                if (isOnline && settings.syncEnabled) {
-                    const pendingCol = db.collection('pendingTransactions');
-                    const snapshot = await pendingCol.get();
-                    pendingTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                    // Save to local storage
-                    localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(pendingTransactions));
-                } else {
-                    // Fall back to local storage
-                    pendingTransactions = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY)) || [];
-                    console.log('Using local pending transactions data');
-                }
-
-                updatePendingCount();
-                loadDashboard();
-            } catch (error) {
-                console.error("Error fetching pending transactions: ", error);
-                // Fall back to local storage
-                pendingTransactions = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY)) || [];
-                updatePendingCount();
-                loadDashboard();
-                alert("Gagal memuat transaksi pending dari database. Menggunakan data lokal.");
-            }
-        }
-
-        // Save product to Firebase and local storage
+        // Save (Add/Update) Product to Firestore
         async function saveProductToFirestore(productData, productId = null) {
             try {
-                // Always update local storage first for immediate UI update
-                const localProducts = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY)) || [];
-
+                const productsCol = db.collection('products');
                 if (productId) {
-                    // Update existing product
-                    const index = localProducts.findIndex(p => p.id === productId);
-                    if (index !== -1) {
-                        localProducts[index] = { ...localProducts[index], ...productData };
-                    }
+                    await productsCol.doc(productId).update(productData);
+                    console.log("Product updated:", productId);
                 } else {
-                    // Add new product
-                    productId = generateId(); // Generate a local ID
-                    localProducts.push({ id: productId, ...productData });
+                    const docRef = await productsCol.add(productData);
+                    console.log("Product added with ID:", docRef.id);
                 }
-
-                localStorage.setItem(LOCAL_PRODUCTS_KEY, JSON.stringify(localProducts));
-
-                if (isOnline && settings.syncEnabled) {
-                    const productsCol = db.collection('products');
-                    if (productId) {
-                        await productsCol.doc(productId).set(productData, { merge: true });
-                    } else {
-                        const docRef = await productsCol.add(productData);
-                        productId = docRef.id;
-                    }
-                }
-
-                await fetchProducts(); // Refresh data
+                await fetchProducts(); // Re-fetch products after saving
                 return true;
             } catch (error) {
                 console.error("Error saving product: ", error);
-                alert("Gagal menyimpan produk ke database. Data disimpan secara lokal.");
+                alert("Gagal menyimpan produk ke database.");
                 return false;
             }
         }
 
-        // Delete product from Firebase and local storage
+        // Delete Product from Firestore
         async function deleteProductFromFirestore(productId) {
             try {
-                // Update local storage first
-                let localProducts = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY)) || [];
-                localProducts = localProducts.filter(p => p.id !== productId);
-                localStorage.setItem(LOCAL_PRODUCTS_KEY, JSON.stringify(localProducts));
-
-                if (isOnline && settings.syncEnabled) {
-                    await db.collection('products').doc(productId).delete();
-                }
-
-                await fetchProducts();
+                await db.collection('products').doc(productId).delete();
+                console.log("Product deleted:", productId);
+                await fetchProducts(); // Re-fetch products after deleting
                 return true;
             } catch (error) {
                 console.error("Error deleting product: ", error);
-                alert("Gagal menghapus produk dari database. Data dihapus secara lokal.");
+                alert("Gagal menghapus produk dari database.");
                 return false;
             }
         }
 
-        // Save transaction to Firebase and local storage
+        // Fetch Transactions from Firestore
+        async function fetchTransactions() {
+            try {
+                const transactionsCol = db.collection('transactions');
+                const snapshot = await transactionsCol.orderBy('date', 'desc').get(); // Order by date for history
+                transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log('Transactions fetched:', transactions);
+                loadHistory();
+                loadDashboard(); // Update dashboard after transactions are loaded
+            } catch (error) {
+                console.error("Error fetching transactions: ", error);
+                alert("Gagal memuat transaksi dari database.");
+            }
+        }
+
+        // Save Transaction to Firestore
         async function saveTransactionToFirestore(transactionData) {
             try {
-                // Update local storage first
-                const localTransactions = JSON.parse(localStorage.getItem(LOCAL_TRANSACTIONS_KEY)) || [];
-                transactionData.id = generateId(); // Ensure ID exists
-                localTransactions.push(transactionData);
-                localStorage.setItem(LOCAL_TRANSACTIONS_KEY, JSON.stringify(localTransactions));
-
-                if (isOnline && settings.syncEnabled) {
-                    await db.collection('transactions').add(transactionData);
-                }
-
-                await fetchTransactions();
+                // Ensure items array does not contain circular references or non-plain objects
+                const cleanTransactionData = JSON.parse(JSON.stringify(transactionData));
+                const docRef = await db.collection('transactions').add(cleanTransactionData);
+                console.log("Transaction added with ID:", docRef.id);
+                await fetchTransactions(); // Re-fetch transactions after saving
                 return true;
             } catch (error) {
                 console.error("Error saving transaction: ", error);
-                alert("Gagal menyimpan transaksi ke database. Data disimpan secara lokal.");
+                alert("Gagal menyimpan transaksi ke database.");
                 return false;
             }
         }
 
-        // Save pending transaction to Firebase and local storage
+        // Fetch Pending Transactions from Firestore
+        async function fetchPendingTransactions() {
+            try {
+                const pendingCol = db.collection('pendingTransactions');
+                const snapshot = await pendingCol.get();
+                pendingTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                updatePendingCount();
+                loadDashboard(); // Update dashboard after pending transactions are loaded
+            } catch (error) {
+                console.error("Error fetching pending transactions: ", error);
+                alert("Gagal memuat transaksi pending dari database.");
+            }
+        }
+
+        // Save Pending Transaction to Firestore
         async function savePendingTransactionToFirestore(transactionData, pendingId = null) {
             try {
-                // Update local storage first
-                const localPending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY)) || [];
-
+                const cleanTransactionData = JSON.parse(JSON.stringify(transactionData));
+                const pendingCol = db.collection('pendingTransactions');
                 if (pendingId) {
-                    const index = localPending.findIndex(t => t.id === pendingId);
-                    if (index !== -1) {
-                        localPending[index] = transactionData;
-                    }
+                    await pendingCol.doc(pendingId).update(cleanTransactionData);
+                    console.log("Pending transaction updated:", pendingId);
                 } else {
-                    transactionData.id = generateId(); // Ensure ID exists
-                    localPending.push(transactionData);
+                    const docRef = await pendingCol.add(cleanTransactionData);
+                    console.log("Pending transaction added with ID:", docRef.id);
                 }
-
-                localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(localPending));
-
-                if (isOnline && settings.syncEnabled) {
-                    const pendingCol = db.collection('pendingTransactions');
-                    if (pendingId) {
-                        await pendingCol.doc(pendingId).set(transactionData, { merge: true });
-                    } else {
-                        await pendingCol.add(transactionData);
-                    }
-                }
-
-                await fetchPendingTransactions();
+                await fetchPendingTransactions(); // Re-fetch pending transactions
                 return true;
             } catch (error) {
                 console.error("Error saving pending transaction: ", error);
-                alert("Gagal menyimpan transaksi pending ke database. Data disimpan secara lokal.");
+                alert("Gagal menyimpan transaksi pending ke database.");
                 return false;
             }
         }
 
-        // Delete pending transaction from Firebase and local storage
+        // Delete Pending Transaction from Firestore
         async function deletePendingTransactionFromFirestore(pendingId) {
             try {
-                // Update local storage first
-                let localPending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY)) || [];
-                localPending = localPending.filter(t => t.id !== pendingId);
-                localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(localPending));
-
-                if (isOnline && settings.syncEnabled) {
-                    await db.collection('pendingTransactions').doc(pendingId).delete();
-                }
-
-                await fetchPendingTransactions();
+                await db.collection('pendingTransactions').doc(pendingId).delete();
+                console.log("Pending transaction deleted:", pendingId);
+                await fetchPendingTransactions(); // Re-fetch pending transactions
                 return true;
             } catch (error) {
                 console.error("Error deleting pending transaction: ", error);
-                alert("Gagal menghapus transaksi pending dari database. Data dihapus secara lokal.");
+                alert("Gagal menghapus transaksi pending dari database.");
                 return false;
+            }
+        }
+
+        // --- End Firebase Data Functions ---
+
+
+        // Initialize the app
+        async function init() {
+            // Assign DOM elements inside init to ensure they are available after HTML loads
+            sidebarToggle = document.getElementById('sidebarToggle');
+            wrapper = document.getElementById('wrapper');
+            sidebarNav = document.getElementById('sidebar-nav');
+
+            // Set default dates for report
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            
+            reportStartDate.valueAsDate = firstDay;
+            reportEndDate.valueAsDate = lastDay;
+
+            // Load settings first (from localStorage)
+            loadSettings();
+
+            // Fetch all data from Firebase
+            await fetchProducts();
+            await fetchTransactions();
+            await fetchPendingTransactions();
+            
+            // Set current transaction ID - now a temporary client-side ID
+            currentTransaction.id = Date.now().toString(); // Use string for compatibility
+
+            // Add event listener to toggle sidebar
+            if (sidebarToggle && wrapper) { 
+                sidebarToggle.addEventListener('click', () => {
+                    wrapper.classList.toggle('toggled');
+                });
+            } else {
+                console.error("Sidebar toggle elements (sidebarToggle or wrapper) not found.");
+            }
+
+            // Close sidebar when a nav link is clicked (for mobile)
+            if (sidebarNav && wrapper) { 
+                sidebarNav.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        setTimeout(() => {
+                            if (window.innerWidth <= 768) { 
+                                wrapper.classList.remove('toggled');
+                            }
+                        }, 150); 
+                    });
+                });
             }
         }
 
         // Load dashboard data
         function loadDashboard() {
             const today = new Date().toISOString().split('T')[0];
-
+            
             const todayTransactions = transactions.filter(t => new Date(t.date).toISOString().split('T')[0] === today);
             const todaySales = todayTransactions.reduce((sum, t) => sum + t.total, 0);
             const todayProfit = todayTransactions.reduce((sum, t) => sum + t.profit, 0);
-
+            
             todaySalesElement.textContent = formatCurrency(todaySales);
             todayProfitElement.textContent = formatCurrency(todayProfit);
             totalProductsElement.textContent = products.length;
@@ -1795,22 +1256,22 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
 
         // Load products based on view (list or grid)
         function loadProducts(searchTerm = '', view = 'list') {
-            currentProductView = view;
-
-            productListElement.innerHTML = '';
-            productGridView.innerHTML = '';
-
-            const filteredProducts = products.filter(p =>
+            currentProductView = view; 
+            
+            productListElement.innerHTML = ''; 
+            productGridView.innerHTML = ''; 
+            
+            const filteredProducts = products.filter(p => 
                 p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
+            
             if (filteredProducts.length === 0) {
                 if (view === 'list') {
                     productTableView.style.display = 'block';
                     productGridView.style.display = 'none';
                     productListElement.innerHTML = '<tr><td colspan="4" class="text-center">Tidak ada produk</td></tr>';
-                } else {
+                } else { 
                     productTableView.style.display = 'none';
-                    productGridView.style.display = 'flex';
+                    productGridView.style.display = 'flex'; 
                     productGridView.innerHTML = '<p class="text-center w-100">Tidak ada produk</p>';
                 }
                 productTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Tidak ada produk</td></tr>';
@@ -1834,7 +1295,7 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                     `;
                     productListElement.appendChild(row);
                 });
-            } else {
+            } else { 
                 productTableView.style.display = 'none';
                 productGridView.style.display = 'grid';
                 filteredProducts.forEach(product => {
@@ -1856,9 +1317,9 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                     productGridView.appendChild(card);
                 });
             }
-
+            
             productTableBody.innerHTML = '';
-            products.forEach(product => {
+            products.forEach(product => { // Always display all products in management table
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
@@ -1879,24 +1340,24 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                 `;
                 productTableBody.appendChild(row);
             });
-
+            
             document.querySelectorAll('.add-to-cart').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-id');
+                    const productId = this.getAttribute('data-id'); // Keep as string for Firestore ID
                     addToCart(productId);
                 });
             });
-
+            
             document.querySelectorAll('.edit-product').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-id');
+                    const productId = this.getAttribute('data-id'); 
                     editProduct(productId);
                 });
             });
-
+            
             document.querySelectorAll('.delete-product').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-id');
+                    const productId = this.getAttribute('data-id'); 
                     deleteProduct(productId);
                 });
             });
@@ -1905,246 +1366,36 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
         // Load transaction history
         function loadHistory() {
             historyList.innerHTML = '';
-
+            
             if (transactions.length === 0) {
                 historyList.innerHTML = '<tr><td colspan="5" class="text-center">Tidak ada transaksi</td></tr>';
                 return;
             }
-
+            
+            // Transactions are already sorted by fetchTransactions
             transactions.forEach(transaction => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td class="transaction-id">#${transaction.id}</td>
-                    <td class="transaction-date">${new Date(transaction.date).toLocaleString()}</td>
-                    <td class="transaction-items">${transaction.items.length} items</td>
-                    <td class="transaction-total">${formatCurrency(transaction.total)}</td>
+                    <td>#${transaction.id}</td>
+                    <td>${new Date(transaction.date).toLocaleString()}</td>
+                    <td>${transaction.items.length} items</td>
+                    <td>${formatCurrency(transaction.total)}</td>
                     <td>
                         <button class="btn btn-sm btn-info view-receipt" data-id="${transaction.id}">
                             <i class="bi bi-receipt"></i> Lihat
                         </button>
-                        <button class="btn btn-sm btn-warning ms-1 edit-history-btn" data-id="${transaction.id}">
-                            <i class="bi bi-pencil"></i> Edit
-                        </button>
-                        </td>
+                    </td>
                 `;
                 historyList.appendChild(row);
             });
-
+            
             document.querySelectorAll('.view-receipt').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const transactionId = this.getAttribute('data-id');
                     viewReceipt(transactionId);
                 });
             });
-
-            document.querySelectorAll('.edit-history-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const transactionId = this.getAttribute('data-id');
-                    editHistory(transactionId);
-                });
-            });
-
-            // TODO: Implement delete functionality for transaction history if needed.
-            // document.querySelectorAll('.delete-history').forEach(btn => { ... });
         }
-
-        function editHistory(transactionId) {
-            editingTransactionId = transactionId;
-            const row = Array.from(historyList.rows).find(row => row.querySelector('.view-receipt')?.getAttribute('data-id') === transactionId);
-            if (row) {
-                row.classList.add('edit-row');
-                const itemsCell = row.querySelector('.transaction-items');
-                const totalCell = row.querySelector('.transaction-total');
-                
-                // Get the original transaction data
-                const originalTransaction = transactions.find(t => t.id === transactionId);
-                const originalItemsCount = originalTransaction ? originalTransaction.items.length : 0;
-                const originalTotal = originalTransaction ? originalTransaction.total : 0;
-
-
-                itemsCell.innerHTML = `<input type="number" class="form-control form-control-sm" value="${originalItemsCount}">`;
-                totalCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${formatNumberForInput(originalTotal)}">`;
-
-                const actionsCell = row.querySelector('td:last-child');
-                actionsCell.innerHTML = `
-                    <button class="btn btn-sm btn-success save-history-btn" data-id="${transactionId}"><i class="bi bi-save"></i></button>
-                    <button class="btn btn-sm btn-secondary cancel-edit-history-btn" data-id="${transactionId}"><i class="bi bi-x"></i></button>
-                `;
-
-                const saveBtn = row.querySelector('.save-history-btn');
-                const cancelBtn = row.querySelector('.cancel-edit-history-btn');
-
-                saveBtn.addEventListener('click', () => saveEditedHistory(transactionId, row));
-                cancelBtn.addEventListener('click', () => cancelEditHistory(transactionId, row));
-            }
-        }
-
-    <!-- Tambahan kode JS untuk memperbaiki fitur edit transaksi di riwayat -->
-
-function enableEditTransaction(transactionId) {
-    const transaction = transactions.find(t => t.id === transactionId);
-    if (!transaction) return;
-
-    const tbody = document.createElement('tbody');
-    transaction.items.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${item.name}</td>
-            <td><input type="number" class="form-control" value="${item.price}" id="edit-price-${index}" /></td>
-            <td><input type="number" class="form-control" value="${item.qty}" id="edit-qty-${index}" /></td>
-            <td>${formatCurrency(item.total)}</td>
-            <td><button class="btn btn-sm btn-success" onclick="saveEditedItem('${transactionId}', ${index})">Simpan</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-    const historyRow = document.querySelector(`#history-list tr[data-id='${transactionId}']`);
-    if (historyRow) {
-        historyRow.after(tbody);
-    }
-}
-
-function saveEditedItem(transactionId, itemIndex) {
-    const transaction = transactions.find(t => t.id === transactionId);
-    if (!transaction) return;
-    const item = transaction.items[itemIndex];
-    const newQty = parseInt(document.getElementById(`edit-qty-${itemIndex}`).value);
-    const newPrice = parseFloat(document.getElementById(`edit-price-${itemIndex}`).value);
-
-    item.qty = newQty;
-    item.price = newPrice;
-    item.total = newQty * newPrice;
-
-    transaction.total = transaction.items.reduce((sum, i) => sum + i.total, 0);
-    transaction.profit = transaction.items.reduce((sum, i) => {
-        const prod = products.find(p => p.id === i.productId);
-        return sum + ((i.price - (prod?.buyPrice || 0)) * i.qty);
-    }, 0);
-
-    localStorage.setItem('pos_transactions', JSON.stringify(transactions));
-    loadHistory();
-    showReceipt(transaction);
-}
-
-function loadHistory() {
-    historyList.innerHTML = '';
-    transactions.forEach(t => {
-        const tr = document.createElement('tr');
-        tr.setAttribute('data-id', t.id);
-        tr.innerHTML = `
-            <td>${t.id}</td>
-            <td>${new Date(t.date).toLocaleString()}</td>
-            <td>${t.items.length} item</td>
-            <td>${formatCurrency(t.total)}</td>
-            <td>
-                <button class="btn btn-sm btn-info" onclick="showReceipt(transactions.find(tr => tr.id === '${t.id}'))">Lihat</button>
-                <button class="btn btn-sm btn-warning" onclick="enableEditTransaction('${t.id}')">Edit</button>
-            </td>
-        `;
-        historyList.appendChild(tr);
-    });
-}
-
-function showReceipt(transaction) {
-    const html = generateReceiptHTML(transaction);
-    receiptContent.innerHTML = html;
-    receiptModal.show();
-}
-
-
-        function saveEditedHistory(transactionId, row) {
-            // *** IMPORTANT: This version only updates the UI.
-            // *** In a real application, you would need to:
-            // *** 1. Validate the input values.
-            // *** 2. Update the 'transactions' array in memory.
-            // *** 3. Persist the changes to local storage and Firebase.
-            const itemsInput = row.querySelector('.transaction-items input');
-            const totalInput = row.querySelector('.transaction-total input');
-
-            const newItemsCount = parseInt(itemsInput.value);
-            const newTotal = parseFloat(totalInput.value.replace(/[^0-9.]/g,""));
-
-            // Find the transaction in the `transactions` array and update its values
-            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
-            if (transactionIndex !== -1) {
-                // For simplicity, we are only updating total and items count here.
-                // In a real scenario, you'd probably need to adjust the actual items array
-                // to reflect the new item count if it actually changes.
-                transactions[transactionIndex].total = newTotal;
-                // You might need to adjust transactions[transactionIndex].items if the count implies real item changes.
-                // For now, let's just make sure the displayed count matches.
-                // This is a placeholder, as 'items.length' is derived from actual items.
-                // If the user truly modified the number of items, you'd need a more complex editing modal.
-                transactions[transactionIndex].items.length = newItemsCount; // This is purely conceptual for display
-            }
-
-            // Update local storage
-            localStorage.setItem(LOCAL_TRANSACTIONS_KEY, JSON.stringify(transactions));
-
-            // Update UI
-            row.querySelector('.transaction-items').textContent = `${newItemsCount} items`;
-            row.querySelector('.transaction-total').textContent = formatCurrency(newTotal);
-
-            const actionsCell = row.querySelector('td:last-child');
-            actionsCell.innerHTML = `
-                <button class="btn btn-sm btn-info view-receipt" data-id="${transactionId}">
-                    <i class="bi bi-receipt"></i> Lihat
-                </button>
-                <button class="btn btn-sm btn-warning ms-1 edit-history-btn" data-id="${transactionId}">
-                    <i class="bi bi-pencil"></i> Edit
-                </button>
-            `;
-            const viewReceiptBtn = actionsCell.querySelector('.view-receipt');
-            const editBtn = actionsCell.querySelector('.edit-history-btn');
-
-            viewReceiptBtn.addEventListener('click', function() {
-                const transactionId = this.getAttribute('data-id');
-                viewReceipt(transactionId);
-            });
-            editBtn.addEventListener('click', () => editHistory(transactionId));
-
-            row.classList.remove('edit-row');
-            editingTransactionId = null;
-            alert('Perubahan riwayat transaksi berhasil disimpan (data lokal diperbarui).');
-            // If you're using Firebase, you would add an update call here:
-            // if (isOnline && settings.syncEnabled) {
-            //     db.collection('transactions').doc(transactionId).update({
-            //         total: newTotal,
-            //         // If actual item data was changed, update here too
-            //     }).then(() => {
-            //         console.log("Transaction updated in Firestore.");
-            //     }).catch(error => {
-            //         console.error("Error updating transaction in Firestore:", error);
-            //     });
-            // }
-        }
-
-        function cancelEditHistory(transactionId, row) {
-            const transaction = transactions.find(t => t.id === transactionId);
-            row.querySelector('.transaction-items').textContent = `${transaction.items.length} items`;
-            row.querySelector('.transaction-total').textContent = formatCurrency(transaction.total);
-
-            const actionsCell = row.querySelector('td:last-child');
-            actionsCell.innerHTML = `
-                <button class="btn btn-sm btn-info view-receipt" data-id="${transactionId}">
-                    <i class="bi bi-receipt"></i> Lihat
-                </button>
-                <button class="btn btn-sm btn-warning ms-1 edit-history-btn" data-id="${transactionId}">
-                    <i class="bi bi-pencil"></i> Edit
-                </button>
-            `;
-            const viewReceiptBtn = actionsCell.querySelector('.view-receipt');
-            const editBtn = actionsCell.querySelector('.edit-history-btn');
-
-            viewReceiptBtn.addEventListener('click', function() {
-                const transactionId = this.getAttribute('data-id');
-                viewReceipt(transactionId);
-            });
-            editBtn.addEventListener('click', () => editHistory(transactionId));
-
-            row.classList.remove('edit-row');
-            editingTransactionId = null;
-        }
-
 
         // Add product to cart
         function addToCart(productId) {
@@ -2153,9 +1404,9 @@ function showReceipt(transaction) {
                 alert('Produk tidak ditemukan!');
                 return;
             }
-
+            
             const existingItem = currentTransaction.items.find(i => i.productId === productId);
-
+            
             if (existingItem) {
                 if (existingItem.kuantitas < product.stock) {
                     existingItem.kuantitas++;
@@ -2169,7 +1420,7 @@ function showReceipt(transaction) {
                     currentTransaction.items.push({
                         productId: product.id,
                         namaBarang: product.name,
-                        hargaBarang: product.sellPrice,
+                        hargaBarang: product.sellPrice, 
                         kuantitas: 1,
                         total: product.sellPrice,
                         buyPrice: product.buyPrice
@@ -2182,26 +1433,26 @@ function showReceipt(transaction) {
             updateTransactionDisplay();
         }
 
-        // Update transaction display
+        // Update transaction display (same as before)
         function updateTransactionDisplay() {
             transactionItemsElement.innerHTML = '';
-
+            
             if (currentTransaction.items.length === 0) {
                 transactionItemsElement.innerHTML = '<tr><td colspan="5" class="text-center">Tidak ada item</td></tr>';
-                transactionTotalElement.textContent = formatCurrency(0);
+                transactionTotalElement.textContent = formatCurrency(0); 
                 return;
             }
-
+            
             let total = 0;
             let profit = 0;
-
+            
             currentTransaction.items.forEach((item, index) => {
                 const itemPrice = parseFloat(item.hargaBarang) || 0;
-                item.total = itemPrice * item.kuantitas;
+                item.total = itemPrice * item.kuantitas; 
 
                 total += item.total;
                 profit += (itemPrice - item.buyPrice) * item.kuantitas;
-
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.namaBarang}</td>
@@ -2224,11 +1475,11 @@ function showReceipt(transaction) {
                 `;
                 transactionItemsElement.appendChild(row);
             });
-
+            
             currentTransaction.total = total;
             currentTransaction.profit = profit;
             transactionTotalElement.textContent = formatCurrency(total);
-
+            
             document.querySelectorAll('.price-input').forEach(input => {
                 input.addEventListener('change', function() {
                     const index = parseInt(this.getAttribute('data-index'));
@@ -2239,7 +1490,7 @@ function showReceipt(transaction) {
                         alert('Harga tidak valid!');
                         this.value = formatNumberForInput(currentTransaction.items[index].hargaBarang);
                     }
-                    updateTransactionDisplay();
+                    updateTransactionDisplay(); 
                 });
             });
 
@@ -2249,14 +1500,14 @@ function showReceipt(transaction) {
                     updateItemQuantity(index, -1);
                 });
             });
-
+            
             document.querySelectorAll('.increase-qty').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const index = parseInt(this.getAttribute('data-index'));
                     updateItemQuantity(index, 1);
                 });
             });
-
+            
             document.querySelectorAll('.qty-input').forEach(input => {
                 input.addEventListener('change', function() {
                     const index = parseInt(this.getAttribute('data-index'));
@@ -2264,7 +1515,7 @@ function showReceipt(transaction) {
                     updateItemQuantity(index, 0, newQty);
                 });
             });
-
+            
             document.querySelectorAll('.remove-item').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const index = parseInt(this.getAttribute('data-index'));
@@ -2273,29 +1524,29 @@ function showReceipt(transaction) {
             });
         }
 
-        // Update item quantity
+        // Update item quantity (same as before)
         function updateItemQuantity(index, change, newQty = null) {
             const item = currentTransaction.items[index];
             if (!item) return;
-
+            
             const product = products.find(p => p.id === item.productId);
-            const maxStock = product ? product.stock : Infinity;
-
+            const maxStock = product ? product.stock : Infinity; 
+            
             let newQuantity = newQty !== null ? newQty : item.kuantitas + change;
-
+            
             if (newQuantity < 1) newQuantity = 1;
             if (newQuantity > maxStock) {
                 alert('Stok tidak mencukupi!');
-                newQuantity = maxStock;
+                newQuantity = maxStock; 
             }
-
+            
             item.kuantitas = newQuantity;
-            item.total = item.hargaBarang * newQuantity;
-
+            item.total = item.hargaBarang * newQuantity; 
+            
             updateTransactionDisplay();
         }
 
-        // Remove item from cart
+        // Remove item from cart (same as before)
         function removeItemFromCart(index) {
             if (index >= 0 && index < currentTransaction.items.length) {
                 currentTransaction.items.splice(index, 1);
@@ -2303,22 +1554,22 @@ function showReceipt(transaction) {
             }
         }
 
-        // Save transaction as pending
+        // Save transaction as pending (Now to Firebase)
         savePendingBtn.addEventListener('click', async () => {
             if (currentTransaction.items.length === 0) {
                 alert('Tidak ada item dalam transaksi!');
                 return;
             }
-
+            
             const pendingCustomerName = prompt("Masukkan nama pelanggan untuk transaksi pending (opsional):");
-            if (pendingCustomerName !== null) {
+            if (pendingCustomerName !== null) { 
                 currentTransaction.customerName = pendingCustomerName.trim();
             } else {
-                currentTransaction.customerName = '';
+                currentTransaction.customerName = ''; 
             }
 
             currentTransaction.date = new Date().toISOString();
-
+            
             const success = await savePendingTransactionToFirestore(currentTransaction);
             if (success) {
                 resetCurrentTransaction();
@@ -2326,49 +1577,49 @@ function showReceipt(transaction) {
             }
         });
 
-        // Process payment
+        // Process payment - Now opens a modal (same as before)
         processPaymentBtn.addEventListener('click', () => {
             if (currentTransaction.items.length === 0) {
                 alert('Tidak ada item dalam transaksi!');
                 return;
             }
-
+            
             paymentModalTotal.textContent = formatCurrency(currentTransaction.total);
-            amountPaidElement.value = formatNumberForInput(currentTransaction.total);
-            customerNameElement.value = currentTransaction.customerName;
+            amountPaidElement.value = formatNumberForInput(currentTransaction.total); 
+            customerNameElement.value = currentTransaction.customerName; 
 
-            calculateChange();
-            paymentModal.show();
+            calculateChange(); 
+            paymentModal.show(); 
         });
 
-        // Calculate change (for Payment Modal)
+        // Calculate change (for Payment Modal) (same as before)
         function calculateChange() {
-            const amountPaid = parseFloat(amountPaidElement.value.replace(/[^0-9.]/g,"")) || 0;
+            const amountPaid = parseFloat(amountPaidElement.value.replace(/[^0-9.]/g,"")) || 0; 
             const change = amountPaid - currentTransaction.total;
-
+            
             currentTransaction.amountPaid = amountPaid;
-            currentTransaction.change = change > 0 ? change : 0;
+            currentTransaction.change = change > 0 ? change : 0; 
             currentTransaction.paymentMethod = paymentMethodElement.value;
             currentTransaction.customerName = customerNameElement.value;
-
+            
             changeAmountElement.textContent = formatCurrency(currentTransaction.change);
         }
 
-        // Complete payment (from Payment Modal)
+        // Complete payment (from Payment Modal) (Now updates Firestore)
         completePaymentBtn.addEventListener('click', async () => {
             if (currentTransaction.items.length === 0) {
                 alert('Tidak ada item dalam transaksi!');
                 return;
             }
-
+            
             const amountPaid = parseFloat(amountPaidElement.value.replace(/[^0-9.]/g,"")) || 0;
-
+            
             if (amountPaid < currentTransaction.total) {
                 alert('Jumlah pembayaran kurang!');
                 return;
             }
-
-            // Update stock for each product in the transaction
+            
+            // Update stock for each product in the transaction in Firestore
             let allStockUpdatesSuccessful = true;
             for (const item of currentTransaction.items) {
                 const product = products.find(p => p.id === item.productId);
@@ -2377,7 +1628,7 @@ function showReceipt(transaction) {
                     const success = await saveProductToFirestore({ stock: newStock }, product.id);
                     if (!success) {
                         allStockUpdatesSuccessful = false;
-                        break;
+                        break; // Stop if any stock update fails
                     }
                 }
             }
@@ -2387,43 +1638,36 @@ function showReceipt(transaction) {
                 return;
             }
 
-            // Save transaction
-            currentTransaction.date = new Date().toISOString();
+            // Save transaction to Firestore
             const transactionSuccess = await saveTransactionToFirestore(currentTransaction);
             if (!transactionSuccess) {
                 alert("Gagal menyimpan transaksi.");
                 return;
             }
-
+            
             // Hide payment modal
             paymentModal.hide();
 
             // Show receipt modal
             receiptContent.innerHTML = generateReceipt(currentTransaction);
             receiptModal.show();
-
-            resetCurrentTransaction();
-
+            
+            resetCurrentTransaction(); 
+            
             await fetchProducts(); // Reload products for updated stock
             await fetchTransactions(); // Reload transactions for history
             loadDashboard(); // Refresh dashboard
-            populateProductFilterDropdown();
+            populateProductFilterDropdown(); 
         });
 
-        // Generate receipt
+        // Generate receipt (same as before)
         function generateReceipt(transaction) {
             let itemsHTML = '';
             transaction.items.forEach(item => {
                 itemsHTML += `
                     <div class="receipt-item">
-                        <span style="width: 60%">${item.namaBarang}</span>
-                        <span style="width: 15%; text-align: right">${item.kuantitas}</span>
-                        <span style="width: 25%; text-align: right">${formatCurrency(item.hargaBarang)}</span>
-                    </div>
-                    <div class="receipt-item">
-                        <span style="width: 60%;"></span>
-                        <span style="width: 15%; text-align: right"></span>
-                        <span style="width: 25%; text-align: right">${formatCurrency(item.total)}</span>
+                        <span>${item.namaBarang} x${item.kuantitas}</span>
+                        <span>${formatCurrency(item.total)}</span>
                     </div>
                 `;
             });
@@ -2440,15 +1684,8 @@ function showReceipt(transaction) {
                         ${transaction.customerName ? `<p>Pelanggan: ${transaction.customerName}</p>` : ''}
                         <p>Metode: ${getPaymentMethodName(transaction.paymentMethod)}</p>
                         <hr>
-                        <div class="receipt-item">
-                            <span style="width: 60%; font-weight: bold;">Produk</span>
-                            <span style="width: 15%; text-align: right; font-weight: bold;">Qty</span>
-                            <span style="width: 25%; text-align: right; font-weight: bold;">Harga</span>
-                        </div>
-                        <hr>
                     </div>
                     ${itemsHTML}
-                    <hr>
                     <div class="receipt-total receipt-item">
                         <span>TOTAL</span>
                         <span>${formatCurrency(transaction.total)}</span>
@@ -2462,14 +1699,13 @@ function showReceipt(transaction) {
                         <span>${formatCurrency(transaction.change)}</span>
                     </div>
                     <div class="receipt-footer">
-                        <hr>
                         <p>${settings.receiptFooter}</p>
                     </div>
                 </div>
             `;
         }
 
-        // Get payment method name
+        // Get payment method name (same as before)
         function getPaymentMethodName(method) {
             const methods = {
                 'cash': 'Tunai',
@@ -2480,10 +1716,10 @@ function showReceipt(transaction) {
             return methods[method] || method;
         }
 
-        // Reset current transaction
+        // Reset current transaction (now generates a new temp ID)
         function resetCurrentTransaction() {
             currentTransaction = {
-                id: generateId(),
+                id: Date.now().toString(), // Generate new client-side ID
                 date: null,
                 items: [],
                 customerName: '',
@@ -2493,46 +1729,46 @@ function showReceipt(transaction) {
                 total: 0,
                 profit: 0
             };
-
+            
             paymentMethodElement.value = 'cash';
             customerNameElement.value = '';
-            amountPaidElement.value = '0';
-            changeAmountElement.textContent = '0';
-            pendingCustomerNameInput.value = '';
+            amountPaidElement.value = '0'; 
+            changeAmountElement.textContent = '0'; 
+            pendingCustomerNameInput.value = ''; 
 
             updateTransactionDisplay();
         }
 
-        // View receipt
+        // View receipt (same as before)
         function viewReceipt(transactionId) {
             const transaction = transactions.find(t => t.id === transactionId);
             if (!transaction) return;
-
+            
             receiptContent.innerHTML = generateReceipt(transaction);
             receiptModal.show();
         }
 
-        // Show pending transactions
+        // Show pending transactions (same as before)
         showPendingBtn.addEventListener('click', () => {
-            loadPendingTransactions();
+            loadPendingTransactions(); // This will use the already fetched pendingTransactions array
             pendingModal.show();
         });
 
-        // Load pending transactions
+        // Load pending transactions (from fetched data)
         function loadPendingTransactions() {
             pendingTransactionsList.innerHTML = '';
-
+            
             if (pendingTransactions.length === 0) {
                 pendingTransactionsList.innerHTML = '<tr><td colspan="6" class="text-center">Tidak ada transaksi pending</td></tr>';
                 return;
             }
-
+            
             pendingTransactions.forEach((transaction, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>#${transaction.id}</td>
                     <td>${new Date(transaction.date).toLocaleString()}</td>
-                    <td>${transaction.customerName || '-'}</td>
+                    <td>${transaction.customerName || '-'}</td> 
                     <td>${transaction.items.length} items</td>
                     <td>${formatCurrency(transaction.total)}</td>
                     <td>
@@ -2546,14 +1782,14 @@ function showReceipt(transaction) {
                 `;
                 pendingTransactionsList.appendChild(row);
             });
-
+            
             document.querySelectorAll('.load-pending').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const pendingId = this.getAttribute('data-id');
                     loadPendingTransaction(pendingId);
                 });
             });
-
+            
             document.querySelectorAll('.delete-pending').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const pendingId = this.getAttribute('data-id');
@@ -2562,13 +1798,13 @@ function showReceipt(transaction) {
             });
         }
 
-        // Load pending transaction
+        // Load pending transaction (Now deletes from Firebase after loading)
         async function loadPendingTransaction(pendingId) {
             const pendingItem = pendingTransactions.find(p => p.id === pendingId);
             if (!pendingItem) return;
 
             currentTransaction = JSON.parse(JSON.stringify(pendingItem)); // Deep copy
-            currentTransaction.id = generateId(); // Assign a new temporary ID for the new transaction
+            currentTransaction.id = Date.now().toString(); // Assign a new temporary ID for the new transaction
 
             const success = await deletePendingTransactionFromFirestore(pendingId);
             if (success) {
@@ -2578,7 +1814,7 @@ function showReceipt(transaction) {
             }
         }
 
-        // Delete pending transaction
+        // Delete pending transaction (Now deletes from Firebase)
         async function deletePendingTransaction(pendingId) {
             if (confirm('Hapus transaksi pending ini?')) {
                 const success = await deletePendingTransactionFromFirestore(pendingId);
@@ -2588,33 +1824,33 @@ function showReceipt(transaction) {
             }
         }
 
-        // Update pending count
+        // Update pending count (same as before, relies on fetched data)
         function updatePendingCount() {
             pendingCountElement.textContent = pendingTransactions.length;
         }
 
-        // Handle product form submission (Add/Edit)
-        productForm.addEventListener('submit', async (e) => {
+        // Handle product form submission (Add/Edit) (Now saves to Firebase)
+        productForm.addEventListener('submit', async (e) => { 
             e.preventDefault();
-
+            
             const name = productNameInput.value.trim();
             const buyPrice = parseFloat(productBuyPriceInput.value);
-            const sellPrice = parseFloat(productSellPriceInput.value.replace(/[^0-9.]/g,""));
+            const sellPrice = parseFloat(productSellPriceInput.value.replace(/[^0-9.]/g,"")); 
             const stock = parseInt(productStockInput.value);
-            const imageFile = productImageUpload.files[0];
+            const imageFile = productImageUpload.files[0]; 
 
-            let imageUrl = null;
+            let imageUrl = null; 
 
             if (!name || isNaN(buyPrice) || isNaN(sellPrice) || isNaN(stock)) {
                 alert('Harap isi semua field dengan benar!');
                 return;
             }
-
+            
             if (buyPrice <= 0 || sellPrice <= 0 || stock < 0) {
                 alert('Harga dan stok harus valid!');
                 return;
             }
-
+            
             if (sellPrice < buyPrice) {
                 alert('Harga jual tidak boleh lebih kecil dari harga beli!');
                 return;
@@ -2645,7 +1881,7 @@ function showReceipt(transaction) {
                     imageUrl = existingProduct.image;
                 }
             }
-
+            
             const productData = {
                 name,
                 buyPrice,
@@ -2658,28 +1894,28 @@ function showReceipt(transaction) {
 
             if (success) {
                 alert(editingProductId ? 'Produk berhasil diperbarui!' : 'Produk berhasil ditambahkan!');
-                editingProductId = null;
+                editingProductId = null; 
                 productForm.reset();
                 saveProductBtn.textContent = 'Simpan Produk';
                 saveProductBtn.classList.remove('btn-warning');
                 saveProductBtn.classList.add('btn-primary');
-                saveProductBtn.disabled = false;
+                saveProductBtn.disabled = false; 
                 cancelEditBtn.style.display = 'none';
-                productImagePreviewContainer.style.display = 'none';
+                productImagePreviewContainer.style.display = 'none'; 
             } else {
                 saveProductBtn.textContent = 'Simpan Produk';
                 saveProductBtn.disabled = false;
             }
         });
 
-        // Function to upload image to Cloudinary
+        // Function to upload image to Cloudinary (same as before)
         async function uploadImageToCloudinary(file) {
             if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET || CLOUDINARY_CLOUD_NAME === 'ganti_dengan_cloud_name_anda') {
                 alert('Konfigurasi Cloudinary belum lengkap. Silakan cek ulang CLOUDINARY_CLOUD_NAME dan CLOUDINARY_UPLOAD_PRESET di kode.');
                 throw new Error('Cloudinary not configured');
             }
 
-        const formData = new FormData();
+            const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
@@ -2697,14 +1933,15 @@ function showReceipt(transaction) {
                 }
 
                 const data = await response.json();
-                return data.secure_url;
+                return data.secure_url; 
             } catch (error) {
                 console.error('Cloudinary upload error:', error);
-                throw error;
+                throw error; 
             }
         }
 
-        // Handle image preview
+
+        // Handle image preview (same as before)
         productImageUpload.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
@@ -2720,19 +1957,19 @@ function showReceipt(transaction) {
             }
         });
 
-        // Edit product
+        // Edit product (same as before, product ID is now string from Firestore)
         function editProduct(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
-
-            editingProductId = productId;
+            
+            editingProductId = productId; 
 
             productIdHidden.value = product.id;
             productNameInput.value = product.name;
             productBuyPriceInput.value = product.buyPrice;
-            productSellPriceInput.value = product.sellPrice;
+            productSellPriceInput.value = product.sellPrice; 
             productStockInput.value = product.stock;
-            productImageUpload.value = '';
+            productImageUpload.value = ''; 
 
             if (product.image) {
                 productImagePreview.src = product.image;
@@ -2741,7 +1978,7 @@ function showReceipt(transaction) {
                 productImagePreview.src = '';
                 productImagePreviewContainer.style.display = 'none';
             }
-
+            
             saveProductBtn.textContent = 'Update Produk';
             saveProductBtn.classList.remove('btn-primary');
             saveProductBtn.classList.add('btn-warning');
@@ -2756,7 +1993,7 @@ function showReceipt(transaction) {
             productNameInput.focus();
         }
 
-        // Cancel Edit
+        // Cancel Edit (same as before)
         cancelEditBtn.addEventListener('click', () => {
             editingProductId = null;
             productForm.reset();
@@ -2764,11 +2001,11 @@ function showReceipt(transaction) {
             saveProductBtn.classList.remove('btn-warning');
             saveProductBtn.classList.add('btn-primary');
             cancelEditBtn.style.display = 'none';
-            productImagePreview.src = '';
-            productImagePreviewContainer.style.display = 'none';
+            productImagePreview.src = ''; 
+            productImagePreviewContainer.style.display = 'none'; 
         });
 
-        // Delete product
+        // Delete product (Now deletes from Firebase)
         async function deleteProduct(productId) {
             if (confirm('Hapus produk ini? Tindakan ini tidak dapat dibatalkan.')) {
                 const success = await deleteProductFromFirestore(productId);
@@ -2778,7 +2015,7 @@ function showReceipt(transaction) {
             }
         }
 
-        // Populate product filter dropdown
+        // Populate product filter dropdown (same as before)
         function populateProductFilterDropdown() {
             reportProductFilter.innerHTML = '<option value="all">Semua Produk</option>';
             products.forEach(product => {
@@ -2789,22 +2026,23 @@ function showReceipt(transaction) {
             });
         }
 
-        // Generate report
+
+        // Generate report (same logic, using current `products` and `transactions` arrays)
         generateReportBtn.addEventListener('click', () => {
             const startDate = reportStartDate.value;
             const endDate = reportEndDate.value;
             const selectedProductId = reportProductFilter.value;
-
+            
             if (!startDate || !endDate) {
                 alert('Harap pilih tanggal mulai dan tanggal akhir!');
                 return;
             }
-
+            
             if (new Date(startDate) > new Date(endDate)) {
                 alert('Tanggal mulai tidak boleh lebih besar dari tanggal akhir!');
                 return;
             }
-
+            
             let filteredTransactions = transactions.filter(t => {
                 const transactionDate = new Date(t.date).toISOString().split('T')[0];
                 return transactionDate >= startDate && transactionDate <= endDate;
@@ -2812,7 +2050,7 @@ function showReceipt(transaction) {
 
             if (selectedProductId !== 'all') {
                 filteredTransactions = filteredTransactions.map(transaction => {
-                    const filteredItems = transaction.items.filter(item => item.productId === selectedProductId);
+                    const filteredItems = transaction.items.filter(item => item.productId === selectedProductId); // Use string ID
                     const newTotal = filteredItems.reduce((sum, item) => sum + item.total, 0);
                     const newProfit = filteredItems.reduce((sum, item) => sum + ((item.hargaBarang - item.buyPrice) * item.kuantitas), 0);
                     return { ...transaction, items: filteredItems, total: newTotal, profit: newProfit };
@@ -2824,19 +2062,19 @@ function showReceipt(transaction) {
                 return sum + t.items.reduce((itemSum, i) => itemSum + (i.buyPrice * i.kuantitas), 0);
             }, 0);
             const grossProfit = totalSales - totalPurchases;
-
+            
             reportTotalSales.textContent = formatCurrency(totalSales);
             reportTotalPurchases.textContent = formatCurrency(totalPurchases);
             reportGrossProfit.textContent = formatCurrency(grossProfit);
-
+            
             reportTransactions.innerHTML = '';
-
+            
             if (filteredTransactions.length === 0) {
                 reportTransactions.innerHTML = '<tr><td colspan="4" class="text-center">Tidak ada transaksi</td></tr>';
             } else {
                 filteredTransactions.forEach(transaction => {
                     const transactionProfit = transaction.total - transaction.items.reduce((sum, i) => sum + (i.buyPrice * i.kuantitas), 0);
-
+                    
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${new Date(transaction.date).toLocaleDateString('id-ID')}</td>
@@ -2852,14 +2090,14 @@ function showReceipt(transaction) {
             generateStockReport(selectedProductId);
         });
 
-        // Generate Item Profit Report function
+        // Generate Item Profit Report function (same logic, using current `products` and `transactions` arrays)
         function generateItemProfitReport(filteredTransactions, selectedProductId = 'all') {
             reportItemProfitTable.innerHTML = '';
-            const itemSales = {};
+            const itemSales = {}; 
 
             filteredTransactions.forEach(transaction => {
                 transaction.items.forEach(item => {
-                    if (selectedProductId === 'all' || item.productId === selectedProductId) {
+                    if (selectedProductId === 'all' || item.productId === selectedProductId) { // Compare string IDs
                         if (!itemSales[item.productId]) {
                             itemSales[item.productId] = {
                                 name: item.namaBarang,
@@ -2877,7 +2115,7 @@ function showReceipt(transaction) {
                 });
             });
 
-            const sortedItems = Object.values(itemSales).sort((a, b) => b.totalSales - a.totalSales);
+            const sortedItems = Object.values(itemSales).sort((a, b) => b.totalSales - a.totalSales); 
 
             if (sortedItems.length === 0) {
                 reportItemProfitTable.innerHTML = '<tr><td colspan="5" class="text-center">Tidak ada data penjualan per item dalam periode ini atau untuk produk yang dipilih.</td></tr>';
@@ -2896,13 +2134,13 @@ function showReceipt(transaction) {
             }
         }
 
-        // Generate Stock Report function
+        // Generate Stock Report function (same logic, using current `products` array)
         function generateStockReport(selectedProductId = 'all') {
             reportStockTable.innerHTML = '';
-
+            
             let filteredProductsForStock = products;
             if (selectedProductId !== 'all') {
-                filteredProductsForStock = products.filter(p => p.id === selectedProductId);
+                filteredProductsForStock = products.filter(p => p.id === selectedProductId); // Compare string IDs
             }
 
             if (filteredProductsForStock.length === 0) {
@@ -2922,13 +2160,14 @@ function showReceipt(transaction) {
             });
         }
 
-        // Download report as PDF
+
+        // Download report as PDF (same logic, uses current `products` and `transactions` arrays)
         downloadReportPdfBtn.addEventListener('click', () => {
             const startDate = reportStartDate.value;
             const endDate = reportEndDate.value;
             const selectedProductId = reportProductFilter.value;
             const selectedProductName = reportProductFilter.options[reportProductFilter.selectedIndex].text;
-
+            
             if (!startDate || !endDate) {
                 alert('Harap generate laporan terlebih dahulu!');
                 return;
@@ -2951,22 +2190,14 @@ function showReceipt(transaction) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            let currentY = 10;
-            const margin = 10;
-            const lineHeight = 7;
-
             doc.setFontSize(16);
-            doc.text(`Laporan Penjualan & Laba`, margin, currentY);
-            currentY += lineHeight;
+            doc.text(`Laporan Penjualan & Laba`, 10, 10);
             doc.setFontSize(10);
-            doc.text(`Periode: ${startDate} s/d ${endDate}`, margin, currentY);
-            currentY += lineHeight;
+            doc.text(`Periode: ${startDate} s/d ${endDate}`, 10, 17);
             if (selectedProductId !== 'all') {
-                doc.text(`Produk: ${selectedProductName}`, margin, currentY);
-                currentY += lineHeight;
+                doc.text(`Produk: ${selectedProductName}`, 10, 24);
             }
-            currentY += lineHeight; // extra space
-
+            
             const totalSales = filteredTransactions.reduce((sum, t) => sum + t.total, 0);
             const totalPurchases = filteredTransactions.reduce((sum, t) => {
                 return sum + t.items.reduce((itemSum, i) => itemSum + (i.buyPrice * i.kuantitas), 0);
@@ -2974,9 +2205,7 @@ function showReceipt(transaction) {
             const grossProfit = totalSales - totalPurchases;
 
             doc.setFontSize(12);
-            doc.text(`Ringkasan:`, margin, currentY);
-            currentY += 5; // space before table
-
+            doc.text(`Ringkasan:`, 10, 35);
             doc.autoTable({
                 head: [['Metrik', 'Nilai']],
                 body: [
@@ -2984,27 +2213,26 @@ function showReceipt(transaction) {
                     ['Total Pembelian (HPP)', formatCurrency(totalPurchases)],
                     ['Laba Kotor', formatCurrency(grossProfit)]
                 ],
-                startY: currentY,
+                startY: 40,
                 theme: 'grid',
                 styles: { fontSize: 10, cellPadding: 2 },
-                headStyles: { fillColor: [13, 110, 253] }
+                headStyles: { fillColor: [13, 110, 253] } 
             });
 
-            currentY = doc.autoTable.previous.finalY + 10;
-            if (currentY + 20 > doc.internal.pageSize.height) {
+            let finalY = doc.autoTable.previous.finalY + 10;
+            if (finalY + 20 > doc.internal.pageSize.height) { 
                 doc.addPage();
-                currentY = 10;
+                finalY = 10; 
             }
             doc.setFontSize(12);
-            doc.text(`Detail Transaksi:`, margin, currentY);
-            currentY += 5;
+            doc.text(`Detail Transaksi:`, 10, finalY);
 
             const transactionTableColumn = ["Tanggal", "ID Transaksi", "Total", "Laba"];
             const transactionTableRows = [];
 
             filteredTransactions.forEach(transaction => {
                 const transactionProfit = transaction.total - transaction.items.reduce((sum, i) => sum + (i.buyPrice * i.kuantitas), 0);
-
+                
                 if (transaction.items.length > 0) {
                     const transactionData = [
                         new Date(transaction.date).toLocaleDateString('id-ID'),
@@ -3019,29 +2247,26 @@ function showReceipt(transaction) {
             doc.autoTable({
                 head: [transactionTableColumn],
                 body: transactionTableRows,
-                startY: currentY,
+                startY: finalY + 5,
                 styles: { fontSize: 8 },
-                headStyles: { fillColor: [22, 160, 133] }
+                headStyles: { fillColor: [22, 160, 133] } 
             });
 
-            currentY = doc.autoTable.previous.finalY + 10;
-            if (currentY + 20 > doc.internal.pageSize.height) {
+            finalY = doc.autoTable.previous.finalY + 10;
+            if (finalY + 20 > doc.internal.pageSize.height) { 
                 doc.addPage();
-                currentY = 10;
+                finalY = 10; 
             }
             doc.setFontSize(16);
-            doc.text(`Laporan Penjualan & Laba per Item`, margin, currentY);
-            currentY += lineHeight;
+            doc.text(`Laporan Penjualan & Laba per Item`, 10, finalY);
             doc.setFontSize(10);
-            doc.text(`Periode: ${startDate} s/d ${endDate}`, margin, currentY);
-            currentY += lineHeight;
+            doc.text(`Periode: ${startDate} s/d ${endDate}`, 10, finalY + 7);
             if (selectedProductId !== 'all') {
-                doc.text(`Produk: ${selectedProductName}`, margin, currentY);
-                currentY += lineHeight;
+                doc.text(`Produk: ${selectedProductName}`, 10, finalY + 14);
             }
-            currentY += lineHeight; // extra space
 
-            const itemSales = {};
+
+            const itemSales = {}; 
             filteredTransactions.forEach(transaction => {
                 transaction.items.forEach(item => {
                     if (selectedProductId === 'all' || item.productId === selectedProductId) {
@@ -3075,25 +2300,30 @@ function showReceipt(transaction) {
             doc.autoTable({
                 head: [itemProfitTableColumn],
                 body: itemProfitTableRows,
-                startY: currentY,
+                startY: finalY + 20,
                 styles: { fontSize: 8 },
-                headStyles: { fillColor: [255, 193, 7] }
+                headStyles: { fillColor: [255, 193, 7] } 
             });
 
-            currentY = doc.autoTable.previous.finalY + 10;
-            if (currentY + 20 > doc.internal.pageSize.height) {
+            finalY = doc.autoTable.previous.finalY + 10;
+            if (finalY + 20 > doc.internal.pageSize.height) { 
                 doc.addPage();
-                currentY = 10;
+                finalY = 10; 
             }
             doc.setFontSize(16);
-            doc.text(`Laporan Stok Produk (Terkini)`, margin, currentY);
-            currentY += lineHeight;
+            doc.text(`Laporan Stok Produk (Terkini)`, 10, finalY);
             if (selectedProductId !== 'all') {
                 doc.setFontSize(10);
-                doc.text(`Produk: ${selectedProductName}`, margin, currentY);
-                currentY += lineHeight;
+                doc.text(`Produk: ${selectedProductName}`, 10, finalY + 7);
+                finalY += 7; 
             }
-            currentY += lineHeight; // extra space
+
+
+            let filteredProductsForStock = products;
+            if (selectedProductId !== 'all') {
+                filteredProductsForStock = products.filter(p => p.id === selectedProductId); 
+            }
+
 
             const stockTableColumn = ["Nama Produk", "Stok Tersedia", "Harga Beli", "Harga Jual"];
             const stockTableRows = filteredProductsForStock.map(product => [
@@ -3106,68 +2336,69 @@ function showReceipt(transaction) {
             doc.autoTable({
                 head: [stockTableColumn],
                 body: stockTableRows,
-                startY: currentY,
+                startY: finalY + 10,
                 styles: { fontSize: 8 },
-                headStyles: { fillColor: [108, 117, 125] }
+                headStyles: { fillColor: [108, 117, 125] } 
             });
+
 
             const fileName = `Laporan_POS_${startDate}_${endDate}_${selectedProductName.replace(/\s+/g, '_')}.pdf`;
             doc.save(fileName);
             alert('Laporan PDF berhasil diunduh!');
         });
 
-        // Backup data
+        // Backup data (Now also includes data from Firebase - but only client-side view)
         backupBtn.addEventListener('click', () => {
             const backupData = {};
-
+            
             if (backupProductsCheckbox.checked) {
-                backupData.products = products;
+                backupData.products = products; // Current client-side products array
             }
-
+            
             if (backupTransactionsCheckbox.checked) {
-                backupData.transactions = transactions;
+                backupData.transactions = transactions; // Current client-side transactions array
             }
-
+            
             if (backupPendingCheckbox.checked) {
-                backupData.pendingTransactions = pendingTransactions;
+                backupData.pendingTransactions = pendingTransactions; // Current client-side pendingTransactions array
             }
-
-            backupData.settings = settings;
-
+            
+            backupData.settings = settings; 
+            
             if (Object.keys(backupData).length === 0) {
                 alert('Tidak ada data yang dipilih untuk di-backup!');
                 return;
             }
-
+            
             const dataStr = JSON.stringify(backupData, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-
+            
             const exportFileDefaultName = `pos_backup_${new Date().toISOString().slice(0,10)}.json`;
-
+            
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', exportFileDefaultName);
-            document.body.appendChild(linkElement);
+            document.body.appendChild(linkElement); 
             linkElement.click();
-            document.body.removeChild(linkElement);
+            document.body.removeChild(linkElement); 
             alert('Data berhasil di-backup!');
         });
 
-        // Restore data
+        // Restore data (Now restores to Firebase)
         restoreBtn.addEventListener('click', () => {
             if (!restoreFile.files.length) {
                 alert('Harap pilih file backup terlebih dahulu!');
                 return;
             }
-
+            
             if (confirm('Restore data akan mengganti data yang ada di Firebase. Pastikan Anda sudah membackup data terbaru. Lanjutkan?')) {
                 const file = restoreFile.files[0];
                 const reader = new FileReader();
-
-                reader.onload = async (event) => {
+                
+                reader.onload = async (event) => { // Made async
                     try {
                         const data = JSON.parse(event.target.result);
-
+                        
                         let restoreConfirmed = false;
                         if (data.products) {
                             if (confirm('Restore data produk ke Firebase? (Ini akan menghapus dan menimpa semua data produk yang ada di Firebase)')) {
@@ -3178,14 +2409,13 @@ function showReceipt(transaction) {
                                 }
                                 // Add new products
                                 for (const product of data.products) {
-                                    // Use set with merge: true to avoid overwriting existing documents if they share an ID
-                                    // Or use .add() to generate new IDs for restored products
-                                    await db.collection('products').add(product); // Add generates new ID
+                                    // Use set with a specific ID or add to let Firebase generate
+                                    await db.collection('products').add(product); // Add without specifying ID
                                 }
                                 restoreConfirmed = true;
                             }
                         }
-
+                        
                         if (data.transactions) {
                             if (confirm('Restore data transaksi ke Firebase? (Ini akan menghapus dan menimpa semua data transaksi yang ada di Firebase)')) {
                                 const existingTransactionRefs = await db.collection('transactions').listDocuments();
@@ -3193,12 +2423,12 @@ function showReceipt(transaction) {
                                     await docRef.delete();
                                 }
                                 for (const transaction of data.transactions) {
-                                    await db.collection('transactions').add(transaction); // Add generates new ID
+                                    await db.collection('transactions').add(transaction);
                                 }
                                 restoreConfirmed = true;
                             }
                         }
-
+                        
                         if (data.pendingTransactions) {
                             if (confirm('Restore transaksi pending ke Firebase? (Ini akan menghapus dan menimpa semua transaksi pending yang ada di Firebase)')) {
                                 const existingPendingRefs = await db.collection('pendingTransactions').listDocuments();
@@ -3206,7 +2436,7 @@ function showReceipt(transaction) {
                                     await docRef.delete();
                                 }
                                 for (const pending of data.pendingTransactions) {
-                                    await db.collection('pendingTransactions').add(pending); // Add generates new ID
+                                    await db.collection('pendingTransactions').add(pending);
                                 }
                                 restoreConfirmed = true;
                             }
@@ -3219,7 +2449,7 @@ function showReceipt(transaction) {
                                 restoreConfirmed = true;
                             }
                         }
-
+                        
                         if (restoreConfirmed) {
                             await init(); // Re-initialize to fetch all data again
                             alert('Data berhasil di-restore ke Firebase dan diperbarui!');
@@ -3232,33 +2462,32 @@ function showReceipt(transaction) {
                         console.error("Restore error:", error);
                     }
                 };
-
+                
                 reader.readAsText(file);
             }
         });
 
-
-        // Print receipt
+        // Print receipt (same as before)
         printReceiptBtn.addEventListener('click', () => {
             const modalFooter = document.querySelector('#receiptModal .modal-footer');
             if (modalFooter) modalFooter.classList.add('d-none');
 
             const receiptElement = document.getElementById('printable-receipt');
             if (settings.printerPaperSize === '58mm') {
-                receiptElement.style.maxWidth = '220px';
+                receiptElement.style.maxWidth = '220px'; 
             } else if (settings.printerPaperSize === '80mm') {
-                receiptElement.style.maxWidth = '300px';
+                receiptElement.style.maxWidth = '300px'; 
             } else {
-                receiptElement.style.maxWidth = '';
+                receiptElement.style.maxWidth = ''; 
             }
 
             window.print();
 
             if (modalFooter) modalFooter.classList.remove('d-none');
-            receiptElement.style.maxWidth = '300px';
+            receiptElement.style.maxWidth = '300px'; 
         });
 
-        // Share receipt as image
+        // Share receipt as image (using html2canvas and Web Share API) (same as before)
         shareReceiptImageBtn.addEventListener('click', () => {
             const receiptElement = document.getElementById('printable-receipt');
             if (!receiptElement) {
@@ -3282,7 +2511,7 @@ function showReceipt(transaction) {
                                 text: 'Berikut struk pembayaran dari toko kami.'
                             });
                             console.log('Struk berhasil dibagikan');
-                        } catch (error) {
+                        }                       catch (error) {
                             console.error('Error sharing:', error);
                             alert('Gagal berbagi struk. Fitur ini mungkin tidak didukung di perangkat atau browser Anda. Silakan download secara manual.');
                             const imageDataUrl = canvas.toDataURL('image/png');
@@ -3311,7 +2540,7 @@ function showReceipt(transaction) {
             });
         });
 
-        // Load settings
+        // --- Settings Management --- (settings still in localStorage)
         function loadSettings() {
             storeNameInput.value = settings.storeName;
             storeAddressInput.value = settings.storeAddress;
@@ -3320,30 +2549,8 @@ function showReceipt(transaction) {
             printerPaperSizeSelect.value = settings.printerPaperSize;
             printPreviewSelect.value = settings.printPreview;
             currencySymbolInput.value = settings.currencySymbol;
-
-            // Add sync toggle to settings form
-            const syncToggle = document.createElement('div');
-            syncToggle.className = 'mb-3 form-check form-switch';
-            syncToggle.innerHTML = `
-                <input class="form-check-input" type="checkbox" id="sync-enabled" ${settings.syncEnabled ? 'checked' : ''}>
-                <label class="form-check-label" for="sync-enabled">Sinkronisasi Online</label>
-            `;
-            const cardBodySettings = document.querySelector('#settings .card-body');
-            // Ensure we don't add it multiple times
-            if (!cardBodySettings.querySelector('#sync-enabled')) {
-                 cardBodySettings.insertBefore(syncToggle, cardBodySettings.firstChild);
-            }
-
-            document.getElementById('sync-enabled').addEventListener('change', function() {
-                settings.syncEnabled = this.checked;
-                localStorage.setItem('pos_settings', JSON.stringify(settings));
-                if (this.checked && isOnline) {
-                    syncData();
-                }
-            });
         }
 
-        // Save store settings
         storeSettingsForm.addEventListener('submit', (e) => {
             e.preventDefault();
             settings.storeName = storeNameInput.value.trim();
@@ -3357,7 +2564,6 @@ function showReceipt(transaction) {
             }
         });
 
-        // Save printer settings
         savePrinterSettingsBtn.addEventListener('click', () => {
             settings.printerPaperSize = printerPaperSizeSelect.value;
             settings.printPreview = printPreviewSelect.value;
@@ -3365,33 +2571,33 @@ function showReceipt(transaction) {
             alert('Pengaturan printer berhasil disimpan!');
         });
 
-        // Save other settings
-        saveOtherSettingsBtn.addEventListener('click', async () => {
+        saveOtherSettingsBtn.addEventListener('click', async () => { // Made async
             settings.currencySymbol = currencySymbolInput.value.trim();
             localStorage.setItem('pos_settings', JSON.stringify(settings));
             alert('Pengaturan lainnya berhasil disimpan!');
             // Re-fetch and reload data to reflect currency change
-            await fetchProducts();
-            await fetchTransactions();
-            await fetchPendingTransactions();
+            await fetchProducts(); // Needed to update product display with new currency symbol
+            await fetchTransactions(); // Needed for dashboard/history
+            await fetchPendingTransactions(); // Needed for dashboard
             loadDashboard();
-            updateTransactionDisplay();
+            updateTransactionDisplay(); // To update current transaction display
         });
 
-        // Format currency
+
+        // Format currency (same as before)
         function formatCurrency(amount) {
-            return settings.currencySymbol + parseFloat(amount).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            return settings.currencySymbol + parseFloat(amount).toLocaleString('id-ID');
         }
 
-        // Format number for input field
+        // Format number for input field (same as before)
         function formatNumberForInput(amount) {
-            return parseFloat(amount).toLocaleString('en-US', { useGrouping: false, minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            return parseFloat(amount).toLocaleString('en-US', {useGrouping: false});
         }
 
-        // Event listeners
+        // Event listeners (mostly same as before)
         amountPaidElement.addEventListener('input', () => {
             const cleanValue = amountPaidElement.value.replace(/[^0-9.]/g,"");
-            amountPaidElement.value = cleanValue;
+            amountPaidElement.value = cleanValue; 
             calculateChange();
         });
 
@@ -3406,8 +2612,9 @@ function showReceipt(transaction) {
             // This input is primarily for initially *setting* the customer name before saving as pending.
         });
 
+
         productSearchElement.addEventListener('input', (e) => {
-            loadProducts(e.target.value, currentProductView);
+            loadProducts(e.target.value, currentProductView); 
         });
         productListSearch.addEventListener('input', (e) => {
             loadProducts(e.target.value, currentProductView);
@@ -3425,216 +2632,9 @@ function showReceipt(transaction) {
             loadProducts(productSearchElement.value, 'grid');
         });
 
-        // Quick menu button event listeners
-        quickSalesBtn.addEventListener('click', () => {
-            const salesTabElement = document.getElementById('nav-sales-tab');
-            if (salesTabElement) {
-                const bsTab = new bootstrap.Tab(salesTabElement);
-                bsTab.show();
-            }
-        });
-
-        quickAddProductBtn.addEventListener('click', () => {
-            const stockTabElement = document.getElementById('nav-stock-tab');
-            if (stockTabElement) {
-                const bsTab = new bootstrap.Tab(stockTabElement);
-                bsTab.show();
-            }
-        });
-
-        // Initialize the app
-        async function init() {
-            // Set default dates for report
-            const now = new Date();
-            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-            reportStartDate.valueAsDate = firstDay;
-            reportEndDate.valueAsDate = lastDay;
-
-            // Load settings
-            loadSettings();
-
-            // Check if we need to sync data
-            const lastSync = localStorage.getItem(LOCAL_LAST_SYNC_KEY);
-            const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
-
-            if (isOnline && settings.syncEnabled && (!lastSync || lastSync < oneHourAgo)) {
-                await syncData();
-            } else {
-                // Load from local storage if not syncing
-                await fetchProducts();
-                await fetchTransactions();
-                await fetchPendingTransactions();
-            }
-
-            // Set current transaction ID
-            currentTransaction.id = generateId();
-
-            // Add event listener to toggle sidebar
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const wrapper = document.getElementById('wrapper');
-            const sidebarNav = document.getElementById('sidebar-nav');
-
-            if (sidebarToggle && wrapper) {
-                sidebarToggle.addEventListener('click', () => {
-                    wrapper.classList.toggle('toggled');
-                });
-            }
-
-            if (sidebarNav && wrapper) {
-                sidebarNav.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', () => {
-                        setTimeout(() => {
-                            if (window.innerWidth <= 768) {
-                                wrapper.classList.remove('toggled');
-                            }
-                        }, 150);
-                    });
-                });
-            }
-            loadHistory(); // Ensure history is loaded on initialization
-        }
 
         // Call init() when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', init);
-    
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-
-<script>
-function enableEditTransaction(transactionId) {
-    const transaction = transactions.find(t => t.id === transactionId);
-    if (!transaction) return;
-
-    const tbody = document.createElement('tbody');
-    tbody.classList.add('edit-row');
-
-    transaction.items.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="text-wrap small">${item.name}</td>
-            <td><input type="number" class="form-control form-control-sm" value="${item.price}" id="edit-price-${index}" /></td>
-            <td><input type="number" class="form-control form-control-sm" value="${item.qty}" id="edit-qty-${index}" /></td>
-            <td class="small">${formatCurrency(item.total)}</td>
-            <td>
-                <button class="btn btn-sm btn-success mb-1 w-100" onclick="saveEditedItem('${transactionId}', ${index})">
-                    <i class="bi bi-check-circle"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-
-    const historyRow = document.querySelector(`#history-list tr[data-id='${transactionId}']`);
-    if (historyRow) {
-        historyRow.after(tbody);
-    }
-}
-
-function saveEditedItem(transactionId, itemIndex) {
-    const transaction = transactions.find(t => t.id === transactionId);
-    if (!transaction) return;
-    const item = transaction.items[itemIndex];
-    const newQty = parseInt(document.getElementById(`edit-qty-${itemIndex}`).value);
-    const newPrice = parseFloat(document.getElementById(`edit-price-${itemIndex}`).value);
-
-    item.qty = newQty;
-    item.price = newPrice;
-    item.total = newQty * newPrice;
-
-    transaction.total = transaction.items.reduce((sum, i) => sum + i.total, 0);
-    transaction.profit = transaction.items.reduce((sum, i) => {
-        const prod = products.find(p => p.id === i.productId);
-        return sum + ((i.price - (prod?.buyPrice || 0)) * i.qty);
-    }, 0);
-
-    localStorage.setItem('pos_transactions', JSON.stringify(transactions));
-    loadHistory();
-    showReceipt(transaction);
-}
-
-function deleteTransaction(transactionId) {
-    if (!confirm('Yakin ingin menghapus transaksi ini?')) return;
-    transactions = transactions.filter(t => t.id !== transactionId);
-    localStorage.setItem('pos_transactions', JSON.stringify(transactions));
-    loadHistory();
-}
-
-function loadHistory() {
-    historyList.innerHTML = '';
-    transactions.forEach(t => {
-        const tr = document.createElement('tr');
-        tr.setAttribute('data-id', t.id);
-        tr.innerHTML = `
-            <td class="text-break small">${t.id}</td>
-            <td class="small">${new Date(t.date).toLocaleString()}</td>
-            <td class="small">${t.items.length} item</td>
-            <td class="fw-bold text-end">${formatCurrency(t.total)}</td>
-            <td class="text-nowrap">
-                <button class="btn btn-sm btn-info mb-1" onclick="showReceipt(transactions.find(tr => tr.id === '${t.id}'))">
-                    <i class="bi bi-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-warning mb-1" onclick="enableEditTransaction('${t.id}')">
-                    <i class="bi bi-pencil-square"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" onclick="deleteTransaction('${t.id}')">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
-        historyList.appendChild(tr);
-    });
-}
-</script>
-
+    </script>
 </body>
 </html>
