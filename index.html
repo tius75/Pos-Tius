@@ -954,313 +954,14 @@
         <i class="bi bi-wifi-off"></i> Offline Mode
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js"></script>
 
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js">
-document.getElementById('download-report-pdf').addEventListener('click', function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const activeTab = document.querySelector('#reportTabs .nav-link.active')?.id;
-
-    doc.setFontSize(16);
-    doc.text("Laporan Rugi Laba", 14, 20);
-    doc.setFontSize(10);
-
-    const startDate = document.getElementById('report-start-date').value || '-';
-    const endDate = document.getElementById('report-end-date').value || '-';
-    doc.text(`Periode: ${startDate} s/d ${endDate}`, 14, 28);
-
-    if (activeTab === 'summary-tab') {
-        const totalSales = document.getElementById('report-total-sales').innerText;
-        const totalPurchases = document.getElementById('report-total-purchases').innerText;
-        const grossProfit = document.getElementById('report-gross-profit').innerText;
-
-        doc.text(`Total Penjualan: ${totalSales}`, 14, 38);
-        doc.text(`Total Pembelian (HPP): ${totalPurchases}`, 14, 44);
-        doc.text(`Laba Kotor: ${grossProfit}`, 14, 50);
-
-        doc.autoTable({
-            html: '#report-transactions',
-            startY: 60,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 123, 255] },
-        });
-    } else if (activeTab === 'item-profit-tab') {
-        doc.autoTable({
-            html: '#report-item-profit-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [40, 167, 69] },
-        });
-    } else if (activeTab === 'stock-report-tab') {
-        doc.autoTable({
-            html: '#report-stock-table',
-            startY: 38,
-            theme: 'grid',
-            headStyles: { fillColor: [255, 193, 7] },
-        });
-    } else {
-        doc.text('Silakan pilih tab laporan yang ingin dicetak.', 14, 38);
-    }
-
-    doc.save("laporan-rugi-laba.pdf");
-});
-
-</script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    
     <script>
         // --- Configuration ---
         const CLOUDINARY_CLOUD_NAME = 'ganti_dengan_cloud_name_anda';
@@ -1280,12 +981,16 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
         const db = firebase.firestore();
 
         // Enable offline persistence
-        db.enablePersistence()
+        db.enablePersistence({ synchronizeTabs: true }) // Enable multi-tab sync
             .then(() => {
-                console.log("Offline persistence enabled");
+                console.log("Offline persistence enabled with multi-tab sync");
             })
             .catch((err) => {
-                console.error("Error enabling offline persistence:", err);
+                if (err.code == 'failed-precondition') {
+                    console.warn("Offline persistence failed: Multiple tabs open or other persistence error. Data will not be synced across tabs.");
+                } else if (err.code == 'unimplemented') {
+                    console.warn("Offline persistence is not available in this browser. App will work in online mode only.");
+                }
             });
 
         // Local storage keys
@@ -1581,7 +1286,7 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                 loadProducts(productSearchElement.value, currentProductView);
                 populateProductFilterDropdown();
                 loadDashboard();
-                alert("Gagal memuat produk dari database. Menggunakan data lokal.");
+                // alert("Gagal memuat produk dari database. Menggunakan data lokal.");
             }
         }
 
@@ -1609,7 +1314,7 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                 transactions = JSON.parse(localStorage.getItem(LOCAL_TRANSACTIONS_KEY)) || [];
                 loadHistory();
                 loadDashboard();
-                alert("Gagal memuat transaksi dari database. Menggunakan data lokal.");
+                // alert("Gagal memuat transaksi dari database. Menggunakan data lokal.");
             }
         }
 
@@ -1637,7 +1342,7 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                 pendingTransactions = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY)) || [];
                 updatePendingCount();
                 loadDashboard();
-                alert("Gagal memuat transaksi pending dari database. Menggunakan data lokal.");
+                // alert("Gagal memuat transaksi pending dari database. Menggunakan data lokal.");
             }
         }
 
@@ -1784,7 +1489,8 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
         function loadDashboard() {
             const today = new Date().toISOString().split('T')[0];
 
-            const todayTransactions = transactions.filter(t => new Date(t.date).toISOString().split('T')[0] === today);
+            
+            const todayTransactions = transactions.filter(t => t && t.date && new Date(t.date).toISOString().split('T')[0] === today);
             const todaySales = todayTransactions.reduce((sum, t) => sum + t.total, 0);
             const todayProfit = todayTransactions.reduce((sum, t) => sum + t.profit, 0);
 
@@ -1916,7 +1622,8 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td class="transaction-id">#${transaction.id}</td>
-                    <td class="transaction-date">${new Date(transaction.date).toLocaleString()}</td>
+                    
+                    <td class="transaction-date">${transaction.date ? new Date(transaction.date).toLocaleString('id-ID') : 'Tanggal Tidak Valid'}</td>
                     <td class="transaction-items">${transaction.items.length} items</td>
                     <td class="transaction-total">${formatCurrency(transaction.total)}</td>
                     <td>
@@ -1944,9 +1651,6 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                     editHistory(transactionId);
                 });
             });
-
-            // TODO: Implement delete functionality for transaction history if needed.
-            // document.querySelectorAll('.delete-history').forEach(btn => { ... });
         }
 
         function editHistory(transactionId) {
@@ -1957,11 +1661,9 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
                 const itemsCell = row.querySelector('.transaction-items');
                 const totalCell = row.querySelector('.transaction-total');
                 
-                // Get the original transaction data
                 const originalTransaction = transactions.find(t => t.id === transactionId);
                 const originalItemsCount = originalTransaction ? originalTransaction.items.length : 0;
                 const originalTotal = originalTransaction ? originalTransaction.total : 0;
-
 
                 itemsCell.innerHTML = `<input type="number" class="form-control form-control-sm" value="${originalItemsCount}">`;
                 totalCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${formatNumberForInput(originalTotal)}">`;
@@ -1980,108 +1682,20 @@ document.getElementById('download-report-pdf').addEventListener('click', functio
             }
         }
 
-    <!-- Tambahan kode JS untuk memperbaiki fitur edit transaksi di riwayat -->
-
-function enableEditTransaction(transactionId) {
-    const transaction = transactions.find(t => t.id === transactionId);
-    if (!transaction) return;
-
-    const tbody = document.createElement('tbody');
-    transaction.items.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${item.name}</td>
-            <td><input type="number" class="form-control" value="${item.price}" id="edit-price-${index}" /></td>
-            <td><input type="number" class="form-control" value="${item.qty}" id="edit-qty-${index}" /></td>
-            <td>${formatCurrency(item.total)}</td>
-            <td><button class="btn btn-sm btn-success" onclick="saveEditedItem('${transactionId}', ${index})">Simpan</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-    const historyRow = document.querySelector(`#history-list tr[data-id='${transactionId}']`);
-    if (historyRow) {
-        historyRow.after(tbody);
-    }
-}
-
-function saveEditedItem(transactionId, itemIndex) {
-    const transaction = transactions.find(t => t.id === transactionId);
-    if (!transaction) return;
-    const item = transaction.items[itemIndex];
-    const newQty = parseInt(document.getElementById(`edit-qty-${itemIndex}`).value);
-    const newPrice = parseFloat(document.getElementById(`edit-price-${itemIndex}`).value);
-
-    item.qty = newQty;
-    item.price = newPrice;
-    item.total = newQty * newPrice;
-
-    transaction.total = transaction.items.reduce((sum, i) => sum + i.total, 0);
-    transaction.profit = transaction.items.reduce((sum, i) => {
-        const prod = products.find(p => p.id === i.productId);
-        return sum + ((i.price - (prod?.buyPrice || 0)) * i.qty);
-    }, 0);
-
-    localStorage.setItem('pos_transactions', JSON.stringify(transactions));
-    loadHistory();
-    showReceipt(transaction);
-}
-
-function loadHistory() {
-    historyList.innerHTML = '';
-    transactions.forEach(t => {
-        const tr = document.createElement('tr');
-        tr.setAttribute('data-id', t.id);
-        tr.innerHTML = `
-            <td>${t.id}</td>
-            <td>${new Date(t.date).toLocaleString()}</td>
-            <td>${t.items.length} item</td>
-            <td>${formatCurrency(t.total)}</td>
-            <td>
-                <button class="btn btn-sm btn-info" onclick="showReceipt(transactions.find(tr => tr.id === '${t.id}'))">Lihat</button>
-                <button class="btn btn-sm btn-warning" onclick="enableEditTransaction('${t.id}')">Edit</button>
-            </td>
-        `;
-        historyList.appendChild(tr);
-    });
-}
-
-function showReceipt(transaction) {
-    const html = generateReceiptHTML(transaction);
-    receiptContent.innerHTML = html;
-    receiptModal.show();
-}
-
-
         function saveEditedHistory(transactionId, row) {
-            // *** IMPORTANT: This version only updates the UI.
-            // *** In a real application, you would need to:
-            // *** 1. Validate the input values.
-            // *** 2. Update the 'transactions' array in memory.
-            // *** 3. Persist the changes to local storage and Firebase.
             const itemsInput = row.querySelector('.transaction-items input');
             const totalInput = row.querySelector('.transaction-total input');
 
             const newItemsCount = parseInt(itemsInput.value);
             const newTotal = parseFloat(totalInput.value.replace(/[^0-9.]/g,""));
 
-            // Find the transaction in the `transactions` array and update its values
             const transactionIndex = transactions.findIndex(t => t.id === transactionId);
             if (transactionIndex !== -1) {
-                // For simplicity, we are only updating total and items count here.
-                // In a real scenario, you'd probably need to adjust the actual items array
-                // to reflect the new item count if it actually changes.
                 transactions[transactionIndex].total = newTotal;
-                // You might need to adjust transactions[transactionIndex].items if the count implies real item changes.
-                // For now, let's just make sure the displayed count matches.
-                // This is a placeholder, as 'items.length' is derived from actual items.
-                // If the user truly modified the number of items, you'd need a more complex editing modal.
-                transactions[transactionIndex].items.length = newItemsCount; // This is purely conceptual for display
             }
 
-            // Update local storage
             localStorage.setItem(LOCAL_TRANSACTIONS_KEY, JSON.stringify(transactions));
 
-            // Update UI
             row.querySelector('.transaction-items').textContent = `${newItemsCount} items`;
             row.querySelector('.transaction-total').textContent = formatCurrency(newTotal);
 
@@ -2106,17 +1720,6 @@ function showReceipt(transaction) {
             row.classList.remove('edit-row');
             editingTransactionId = null;
             alert('Perubahan riwayat transaksi berhasil disimpan (data lokal diperbarui).');
-            // If you're using Firebase, you would add an update call here:
-            // if (isOnline && settings.syncEnabled) {
-            //     db.collection('transactions').doc(transactionId).update({
-            //         total: newTotal,
-            //         // If actual item data was changed, update here too
-            //     }).then(() => {
-            //         console.log("Transaction updated in Firestore.");
-            //     }).catch(error => {
-            //         console.error("Error updating transaction in Firestore:", error);
-            //     });
-            // }
         }
 
         function cancelEditHistory(transactionId, row) {
@@ -2145,7 +1748,6 @@ function showReceipt(transaction) {
             row.classList.remove('edit-row');
             editingTransactionId = null;
         }
-
 
         // Add product to cart
         function addToCart(productId) {
@@ -2437,7 +2039,7 @@ function showReceipt(transaction) {
                         <p>Telp: ${settings.storePhone}</p>
                         <hr>
                         <p>No: #${transaction.id}</p>
-                        <p>${new Date(transaction.date).toLocaleString('id-ID', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                        <p>${transaction.date ? new Date(transaction.date).toLocaleString('id-ID', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</p>
                         ${transaction.customerName ? `<p>Pelanggan: ${transaction.customerName}</p>` : ''}
                         <p>Metode: ${getPaymentMethodName(transaction.paymentMethod)}</p>
                         <hr>
@@ -2532,7 +2134,7 @@ function showReceipt(transaction) {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>#${transaction.id}</td>
-                    <td>${new Date(transaction.date).toLocaleString()}</td>
+                    <td>${transaction.date ? new Date(transaction.date).toLocaleString('id-ID') : 'Tanggal Tidak Valid'}</td>
                     <td>${transaction.customerName || '-'}</td>
                     <td>${transaction.items.length} items</td>
                     <td>${formatCurrency(transaction.total)}</td>
@@ -2806,7 +2408,9 @@ function showReceipt(transaction) {
                 return;
             }
 
+            
             let filteredTransactions = transactions.filter(t => {
+                if (!t || !t.date) return false;
                 const transactionDate = new Date(t.date).toISOString().split('T')[0];
                 return transactionDate >= startDate && transactionDate <= endDate;
             });
@@ -2814,10 +2418,11 @@ function showReceipt(transaction) {
             if (selectedProductId !== 'all') {
                 filteredTransactions = filteredTransactions.map(transaction => {
                     const filteredItems = transaction.items.filter(item => item.productId === selectedProductId);
+                    if (filteredItems.length === 0) return null; // Return null if no items match
                     const newTotal = filteredItems.reduce((sum, item) => sum + item.total, 0);
                     const newProfit = filteredItems.reduce((sum, item) => sum + ((item.hargaBarang - item.buyPrice) * item.kuantitas), 0);
                     return { ...transaction, items: filteredItems, total: newTotal, profit: newProfit };
-                }).filter(transaction => transaction.items.length > 0);
+                }).filter(t => t !== null); // Filter out the null transactions
             }
 
             const totalSales = filteredTransactions.reduce((sum, t) => sum + t.total, 0);
@@ -2837,10 +2442,9 @@ function showReceipt(transaction) {
             } else {
                 filteredTransactions.forEach(transaction => {
                     const transactionProfit = transaction.total - transaction.items.reduce((sum, i) => sum + (i.buyPrice * i.kuantitas), 0);
-
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${new Date(transaction.date).toLocaleDateString('id-ID')}</td>
+                        <td>${transaction.date ? new Date(transaction.date).toLocaleDateString('id-ID') : 'N/A'}</td>
                         <td>#${transaction.id}</td>
                         <td>${formatCurrency(transaction.total)}</td>
                         <td>${formatCurrency(transactionProfit)}</td>
@@ -2878,7 +2482,7 @@ function showReceipt(transaction) {
                 });
             });
 
-            const sortedItems = Object.values(itemSales).sort((a, b) => b.totalSales - a.totalSales);
+              const sortedItems = Object.values(itemSales).sort((a, b) => b.totalSales - a.totalSales);
 
             if (sortedItems.length === 0) {
                 reportItemProfitTable.innerHTML = '<tr><td colspan="5" class="text-center">Tidak ada data penjualan per item dalam periode ini atau untuk produk yang dipilih.</td></tr>';
